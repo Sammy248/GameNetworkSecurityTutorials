@@ -13,6 +13,15 @@ public class Multiplayer : MonoBehaviourPunCallbacks
 
     public InputField roomNameInput;
 
+    public InputField playerNameInput;
+
+    string playerName;
+
+    private void Start()
+    {
+        playerNameInput.text = playerName = string.Format("Player {0}", Random.Range(1, 1000000));
+    }
+
     public void CreateARoom()
     {
         RoomOptions roomOptions = new RoomOptions();
@@ -46,6 +55,7 @@ public class Multiplayer : MonoBehaviourPunCallbacks
     }
     public void LoginButtonClicked()
     {
+        PhotonNetwork.LocalPlayer.NickName = playerName = playerNameInput.text;
         PhotonNetwork.ConnectUsingSettings();
         ActivatePanel("Selection");
     }
