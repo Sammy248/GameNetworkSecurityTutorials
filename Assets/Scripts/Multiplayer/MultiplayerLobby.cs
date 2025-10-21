@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using System.Collections.Generic;
 
 public class Multiplayer : MonoBehaviourPunCallbacks
 {
@@ -11,15 +12,23 @@ public class Multiplayer : MonoBehaviourPunCallbacks
     public Transform InsideRoomPanel;
     public Transform ListRoomsPanel;
 
+    public Transform ListRoomPanel;
+    public Transform roomEntryPrefab;
+    public Transform listRoomPanelContent;
+
     public InputField roomNameInput;
 
     public InputField playerNameInput;
 
     string playerName;
 
+    Dictionary<string, RoomInfo> cachedRoomList;
+
     private void Start()
     {
         playerNameInput.text = playerName = string.Format("Player {0}", Random.Range(1, 1000000));
+
+        cachedRoomList = new Dictionary<string, RoomInfo>();
     }
 
     public void CreateARoom()
@@ -51,6 +60,8 @@ public class Multiplayer : MonoBehaviourPunCallbacks
     {
         Debug.Log("Room has been left");
         ActivatePanel("CreateRoom");
+
+        DestroyChildren(InsideRoomPanel);
 
     }
     public void LoginButtonClicked()
@@ -101,5 +112,63 @@ public class Multiplayer : MonoBehaviourPunCallbacks
         PhotonNetwork.Disconnect();
     }
 
+    public void DestroyChildren(Transform parent)
+    {
+        foreach (Transform child in parent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
 
+    public void ListRoomsClicked()
+    {
+        PhotonNetwork.JoinLobby();
+    }
+
+    public override void OnJoinedLobby()
+    {
+        Debug.Log("Joined Lobby");
+        ActivatePanel("ListRooms");
+    }
+
+    public override void OnRoomListUpdate(List<RoomInfo> roomList)
+    {
+        Debug.Log("Room Update: " + roomList.Count);
+
+        UpdateCachedRoomList(roomList);
+
+        foreach (var room in roomList)
+        {
+            var newRoomEntry = Instantiate(roomEntryPrefab, listRoomPanelContent);
+            var newRoomEntryScript = newRoomEntry.GetComponent<RoomEntry>();
+            newRoomEntryScript.roomName = room.Name;
+            newRoomEntryScript.roomText.text = string.Format("[{0} - ({1}/{2})]", room.Name, room.PlayerCount, room.MaxPlayers);
+        }
+    }
+
+    public void LeaveLobbyClicked()
+    {
+        PhotonNetwork.LeaveLobby();
+    }
+
+    public override void OnLeftLobby()
+    {
+        Debug.Log("LeftLobby!");
+        ActivatePanel("Selection");
+    }
+
+    public void UpdateCachedRoomList(List<RoomInfo> roomList)
+    {
+        foreach(var room in roomList)
+        {
+            if (!room.IsOpen || !room.IsVisible || room.RemovedFromList)
+            {
+                cachedRoomList.Remove(room.Name);
+            }
+            else
+            {
+                cachedRoomList[room.Name] = room;
+            }
+        }
+    }
 }
