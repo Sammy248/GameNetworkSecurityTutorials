@@ -4,7 +4,7 @@ using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
 
-public class Multiplayer : MonoBehaviourPunCallbacks
+public class MultiplayerLobby : MonoBehaviourPunCallbacks
 {
     public Transform LoginPanel;
     public Transform SelectionPanel;
