@@ -48,7 +48,7 @@ public class Multiplayer : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            BulletController bullet = collision.gameObject.GetComponent<BulletController>();
+            MultiplayerBulletController bullet = collision.gameObject.GetComponent<MultiplayerBulletController>();
             TakeDamage(bullet.damage);
         }
     }
