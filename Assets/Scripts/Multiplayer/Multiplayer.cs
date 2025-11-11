@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class Multiplayer : MonoBehaviour
+public class Multiplayer : MonoBehaviour, IPunObservable
 {
     public float movementSpeed = 10f;
 
@@ -41,7 +41,10 @@ public class Multiplayer : MonoBehaviour
         Move();
 
         if (Input.GetKey(KeyCode.Space))
-            Fire();
+        {
+            photonView.RPC("Fire", RpcTarget.AllViaServer);
+
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -65,7 +68,8 @@ public class Multiplayer : MonoBehaviour
 
     void PlayerDied()
     {
-        gameObject.SetActive(false);
+        health = 100;
+        healthBar.value = health;
     }
 
     void Move()
@@ -83,7 +87,20 @@ public class Multiplayer : MonoBehaviour
         rigidbody.MovePosition(rigidbody.position + movementDir);
     }
 
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(health);
+        }
+        else
+        {
+            health = (int)stream.ReceiveNext();
+            healthBar.value = health;
+        }
+    }
 
+    [PunRPC]
     void Fire()
     {
         if (Time.time > nextFire)
@@ -92,7 +109,7 @@ public class Multiplayer : MonoBehaviour
 
             GameObject bullet = Instantiate(bulletPrefab, bulletPosition.position, Quaternion.identity);
 
-            bullet.GetComponent<BulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
+            bullet.GetComponent<MultiplayerBulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
 
             AudioManager.Instance.Play3D(playerShootingAudio, transform.position);
 

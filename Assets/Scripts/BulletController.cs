@@ -33,6 +33,7 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+
         AudioManager.Instance.Play3D(BulletHitAudio, transform.position);
 
         VFXManager.Instance.PlayVFX(bulletImpactEffect,transform.position);

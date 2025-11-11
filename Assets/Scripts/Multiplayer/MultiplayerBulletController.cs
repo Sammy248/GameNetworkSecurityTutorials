@@ -1,13 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
+using Photon.Realtime;
+using Photon.Pun.UtilityScripts;
 
-public class MultiplayerBulletController : MonoBehaviour
+public class MultiplayerBulletController : MonoBehaviourPunCallbacks
 {
 
     Rigidbody rigidBody;
     public int damage = 10;
     public float bulletSpeed = 15f;
+
+    public Photon.Realtime.Player player;
 
     public GameObject bulletImpactEffect;
 
