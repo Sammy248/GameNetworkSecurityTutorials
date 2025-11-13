@@ -9,14 +9,16 @@ public class MultiplayerBulletController : MonoBehaviourPunCallbacks
 {
 
     Rigidbody rigidBody;
-    public int damage = 10;
     public float bulletSpeed = 15f;
-
-    public Photon.Realtime.Player player;
-
     public GameObject bulletImpactEffect;
-
     public AudioClip BulletHitAudio;
+    public int damage = 10;
+
+
+    [HideInInspector]
+    public Photon.Realtime.Player owner;
+
+
 
     // Start is called before the first frame update
     void Awake()
@@ -29,11 +31,14 @@ public class MultiplayerBulletController : MonoBehaviourPunCallbacks
             print("Rigidbody isn't found!");
     }
 
-    public void InitializeBullet(Vector3 originalDirection) 
+    public void InitializeBullet(Vector3 originalDirection,Photon.Realtime.Player givenPlayer) 
     {
-        print(originalDirection);
+        //print(originalDirection);
         transform.forward = originalDirection;
         rigidBody.linearVelocity = transform.forward * bulletSpeed;
+
+        owner = givenPlayer;
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -44,4 +49,5 @@ public class MultiplayerBulletController : MonoBehaviourPunCallbacks
 
         Destroy(gameObject);
     }
+
 }

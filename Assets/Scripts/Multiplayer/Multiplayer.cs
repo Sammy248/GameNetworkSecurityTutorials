@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -52,16 +53,17 @@ public class Multiplayer : MonoBehaviour, IPunObservable
         if (collision.gameObject.CompareTag("Bullet"))
         {
             MultiplayerBulletController bullet = collision.gameObject.GetComponent<MultiplayerBulletController>();
-            TakeDamage(bullet.damage);
+            TakeDamage(bullet);
         }
     }
 
-    void TakeDamage(int damage)
+    void TakeDamage(MultiplayerBulletController bullet)
     {
-        health -= damage;
+        health -= bullet.damage;
         healthBar.value = health;
         if (health <= 0)
         {
+            bullet.owner.AddScore(1);
             PlayerDied();
         }
     }
@@ -109,7 +111,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
 
             GameObject bullet = Instantiate(bulletPrefab, bulletPosition.position, Quaternion.identity);
 
-            bullet.GetComponent<MultiplayerBulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
+            bullet.GetComponent<MultiplayerBulletController>()?.InitializeBullet(transform.rotation * Vector3.forward, photonView.Owner);
 
             AudioManager.Instance.Play3D(playerShootingAudio, transform.position);
 
