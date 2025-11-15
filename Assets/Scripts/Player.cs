@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,9 +11,12 @@ public class Player : MonoBehaviour
     Rigidbody rigidbody;
 
     public float fireRate = 0.75f;
-    public GameObject bulletPrefab;
+    public GameObject[] bulletPrefab;
     public Transform bulletPosition;
     float nextFire;
+
+    public GameObject audioPrefabScript;
+
 
     public GameObject bulletFiringEffect;
 
@@ -78,16 +82,49 @@ public class Player : MonoBehaviour
     {
         if (Time.time > nextFire) 
         {
+            
             nextFire = Time.time + fireRate;
 
-            GameObject bullet = Instantiate(bulletPrefab, bulletPosition.position, Quaternion.identity);
+            GameObject bullet;
+            if (Mathf.Round(Time.time) % 2 == 0)
+            {
+                bullet = Instantiate(bulletPrefab[0], bulletPosition.position, Quaternion.identity);
+
+            }
+            else
+            {
+                bullet = Instantiate(bulletPrefab[1], bulletPosition.position, Quaternion.identity);
+
+            }
 
             bullet.GetComponent<BulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
 
-            AudioManager.Instance.Play3D(playerShootingAudio, transform.position);
-
+            randomSoundPitch(playerShootingAudio);
             VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
+
         }
+    }
+
+    void randomSoundPitch(AudioClip sound)
+    {
+        int[] pentatonicSemitones = new[] { 0, 2, 4, 7, 9 };
+        float pitch = 1;
+        //int semitone = pentatonicSemitones[Random.Range(0, pentatonicSemitones.Length)];
+
+        //for(int i=0; i<5; i++)        BREAKS CODE
+        {
+            pitch = Mathf.Pow(1.059463f, pentatonicSemitones[i]);
+            if (i == 4)
+            {
+                i = 0;
+            }
+        }
+        //float pitch = Mathf.Pow(1.059463f, semitone);
+
+        audioPrefabScript.GetComponent<AudioSource>().pitch = pitch;
+        Debug.Log(audioPrefabScript.GetComponent<AudioSource>().pitch);
+        AudioManager.Instance.Play3D(sound, transform.position);
+
     }
 
 }
