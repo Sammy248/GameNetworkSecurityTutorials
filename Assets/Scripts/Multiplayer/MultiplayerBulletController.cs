@@ -14,6 +14,7 @@ public class MultiplayerBulletController : MonoBehaviourPunCallbacks
     public AudioClip BulletHitAudio;
     public int damage = 10;
 
+    public GameObject audioPrefabScript;
 
     [HideInInspector]
     public Photon.Realtime.Player owner;

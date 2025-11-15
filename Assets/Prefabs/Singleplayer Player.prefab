@@ -316,8 +316,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 10
   fireRate: 0.75
-  bulletPrefab: {fileID: 2498108459180963871, guid: ec707ade61c0c8146aad9c5b8286ac54, type: 3}
+  bulletPrefab:
+  - {fileID: 1310324228276912104, guid: d2bdd40f66b6d5f41bdb93df0858776e, type: 3}
+  - {fileID: 5478178028398713248, guid: 5530ded7f631e9d4abd0682a954f1e69, type: 3}
   bulletPosition: {fileID: 1715735702659594304}
+  audioPrefabScript: {fileID: 9019288755633517005, guid: 131d6e5b6e1184b45aaf7be174502842, type: 3}
   bulletFiringEffect: {fileID: 1000011513120438, guid: f70d27f5cf28c8941bbfd6febd74797f, type: 3}
   playerShootingAudio: {fileID: 8300000, guid: 9d685be7bcccd974bb6312c9965ff4e5, type: 3}
   health: 100

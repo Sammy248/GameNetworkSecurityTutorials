@@ -65,7 +65,9 @@ public class Player : MonoBehaviour
     void Move()
     {
         if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
+        {
             return;
+        }
 
         var horizontalInput = Input.GetAxis("Horizontal");
         var verticalInput = Input.GetAxis("Vertical");
@@ -85,19 +87,12 @@ public class Player : MonoBehaviour
             
             nextFire = Time.time + fireRate;
 
-            GameObject bullet;
-            if (Mathf.Round(Time.time) % 2 == 0)
-            {
-                bullet = Instantiate(bulletPrefab[0], bulletPosition.position, Quaternion.identity);
+            GameObject bullet = Instantiate(bulletPrefab[Random.Range(0, bulletPrefab.Length)],
+                bulletPosition.position, Quaternion.identity);
 
-            }
-            else
-            {
-                bullet = Instantiate(bulletPrefab[1], bulletPosition.position, Quaternion.identity);
-
-            }
 
             bullet.GetComponent<BulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
+            Debug.Log("ooee bullet go");
 
             randomSoundPitch(playerShootingAudio);
             VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
@@ -109,22 +104,14 @@ public class Player : MonoBehaviour
     {
         int[] pentatonicSemitones = new[] { 0, 2, 4, 7, 9 };
         float pitch = 1;
-        //int semitone = pentatonicSemitones[Random.Range(0, pentatonicSemitones.Length)];
+        int semitone = pentatonicSemitones[Random.Range(0, pentatonicSemitones.Length)];
 
-        //for(int i=0; i<5; i++)        BREAKS CODE
-        {
-            pitch = Mathf.Pow(1.059463f, pentatonicSemitones[i]);
-            if (i == 4)
-            {
-                i = 0;
-            }
-        }
-        //float pitch = Mathf.Pow(1.059463f, semitone);
-
-        audioPrefabScript.GetComponent<AudioSource>().pitch = pitch;
-        Debug.Log(audioPrefabScript.GetComponent<AudioSource>().pitch);
-        AudioManager.Instance.Play3D(sound, transform.position);
-
+        pitch *= Mathf.Pow(1.059463f, semitone); //randomise pitch according to a pentatonic scale
+        
+        audioPrefabScript.GetComponent<AudioSource>().pitch = pitch;    //apply pitch
+        audioPrefabScript.GetComponent<AudioSource>().volume = Random.Range(0.6f, 1); //randomise volume
+        //Debug.Log(audioPrefabScript.GetComponent<AudioSource>().pitch);
+        AudioManager.Instance.Play3D(sound, transform.position);//play sound
     }
 
 }

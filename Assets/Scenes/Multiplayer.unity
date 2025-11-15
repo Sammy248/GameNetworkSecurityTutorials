@@ -4290,6 +4290,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -8907809472585213886, guid: 6d2929a32d7cf974bb3bd259dc4f1d54, type: 3}
+      propertyPath: bulletPrefab.Array.size
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: -1601668925927973338, guid: 6d2929a32d7cf974bb3bd259dc4f1d54, type: 3}
       propertyPath: sceneViewId
       value: 1
