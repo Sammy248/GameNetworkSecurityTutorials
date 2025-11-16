@@ -18,9 +18,14 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
 
     public InputField roomNameInput;
 
+    public GameObject startGameButton;
+
     public InputField playerNameInput;
 
     string playerName;
+
+    public GameObject textPrefab;
+    public Transform insideRoomPlayerList;
 
     Dictionary<string, RoomInfo> cachedRoomList;
 
@@ -29,10 +34,13 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         playerNameInput.text = playerName = string.Format("Player {0}", Random.Range(1, 1000000));
 
         cachedRoomList = new Dictionary<string, RoomInfo>();
+
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
     public void CreateARoom()
     {
+        Debug.Log("Created Room?");
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = 4;
         roomOptions.IsVisible = true;
@@ -45,12 +53,21 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     }
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
-
+        Debug.Log("RoomCreateFailed" + message);
     }
     public override void OnJoinedRoom()
     {
         Debug.Log("Room has been Joined");
         ActivatePanel("InsideRoom");
+
+        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
+
+        foreach (var player in PhotonNetwork.PlayerList)
+        {
+            var playerListEntry = Instantiate(textPrefab, insideRoomPlayerList);
+            playerListEntry.GetComponent<Text>().text = player.NickName;
+            playerListEntry.name = player.NickName;
+        }
     }
     public void LeaveRoom()
     {
@@ -69,6 +86,13 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.NickName = playerName = playerNameInput.text;
         PhotonNetwork.ConnectUsingSettings();
         ActivatePanel("Selection");
+    }
+
+    public void StartGameClicked()
+    {
+        PhotonNetwork.CurrentRoom.IsOpen = false;
+        PhotonNetwork.CurrentRoom.IsVisible = false;
+        PhotonNetwork.LoadLevel("Multiplayer");
     }
 
     public override void OnConnectedToMaster()
@@ -124,7 +148,10 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.JoinLobby();
     }
-
+    public void OnJoinRandomRoomClicked()
+    {
+        PhotonNetwork.JoinRandomRoom();
+    }
     public override void OnJoinedLobby()
     {
         Debug.Log("Joined Lobby");
@@ -135,14 +162,16 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     {
         Debug.Log("Room Update: " + roomList.Count);
 
+        DestroyChildren(listRoomPanelContent);
+
         UpdateCachedRoomList(roomList);
 
-        foreach (var room in roomList)
+        foreach (var room in cachedRoomList)
         {
             var newRoomEntry = Instantiate(roomEntryPrefab, listRoomPanelContent);
             var newRoomEntryScript = newRoomEntry.GetComponent<RoomEntry>();
-            newRoomEntryScript.roomName = room.Name;
-            newRoomEntryScript.roomText.text = string.Format("[{0} - ({1}/{2})]", room.Name, room.PlayerCount, room.MaxPlayers);
+            newRoomEntryScript.roomName = room.Key;
+            newRoomEntryScript.roomText.text = string.Format("[{0} - ({1}/{2})]", room.Key, room.Value.PlayerCount, room.Value.MaxPlayers);
         }
     }
 
@@ -154,6 +183,8 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public override void OnLeftLobby()
     {
         Debug.Log("LeftLobby!");
+        DestroyChildren(listRoomPanelContent);
+        cachedRoomList.Clear();
         ActivatePanel("Selection");
     }
 
@@ -170,5 +201,40 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
                 cachedRoomList[room.Name] = room;
             }
         }
+    }
+
+    public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
+    {
+        Debug.Log("Player Joined Room");
+        var playerListEntry = Instantiate(textPrefab, insideRoomPlayerList);
+        playerListEntry.GetComponent<Text>().text = newPlayer.NickName;
+        playerListEntry.name = newPlayer.NickName;
+    }
+
+    public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
+    {
+        Debug.Log("Player Left Room");
+        foreach (Transform child in insideRoomPlayerList)
+        {
+            if (child.name == otherPlayer.NickName)
+            {
+                Destroy(child.gameObject);
+                break;
+            }
+        }
+    }
+
+    public override void OnJoinRandomFailed(short returnCode, string message)
+    {
+        Debug.Log("Failed to join Random Room. " + message);
+    }
+    public override void OnJoinRoomFailed(short returnCode, string message)
+    {
+        Debug.Log("Failed to join Room. " + message);
+    }
+
+    public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
+    {
+        startGameButton.SetActive(PhotonNetwork.IsMasterClient);
     }
 }

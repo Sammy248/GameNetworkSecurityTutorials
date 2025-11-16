@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,12 +8,15 @@ public class Player : MonoBehaviour
 {
     public float movementSpeed = 10f;
 
-    Rigidbody rigidbody;
+    Rigidbody rb;
 
     public float fireRate = 0.75f;
-    public GameObject bulletPrefab;
+    public GameObject[] bulletPrefab;
     public Transform bulletPosition;
     float nextFire;
+
+    public GameObject audioPrefabScript;
+
 
     public GameObject bulletFiringEffect;
 
@@ -24,7 +28,7 @@ public class Player : MonoBehaviour
     public Slider healthBar;
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void FixedUpdate()
@@ -60,9 +64,12 @@ public class Player : MonoBehaviour
 
     void Move()
     {
+        
         if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
+        {
             return;
-
+        }
+        
         var horizontalInput = Input.GetAxis("Horizontal");
         var verticalInput = Input.GetAxis("Vertical");
 
@@ -70,7 +77,7 @@ public class Player : MonoBehaviour
         transform.rotation = rotation;
 
         Vector3 movementDir = transform.forward * Time.deltaTime * movementSpeed;
-        rigidbody.MovePosition(rigidbody.position + movementDir);
+        rb.MovePosition(rb.position + movementDir);
     }
 
 
@@ -78,16 +85,34 @@ public class Player : MonoBehaviour
     {
         if (Time.time > nextFire) 
         {
+            
             nextFire = Time.time + fireRate;
 
-            GameObject bullet = Instantiate(bulletPrefab, bulletPosition.position, Quaternion.identity);
+            GameObject bullet = Instantiate(bulletPrefab[Random.Range(0, bulletPrefab.Length)],
+                bulletPosition.position, Quaternion.identity);
+
 
             bullet.GetComponent<BulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
+            Debug.Log("ooee bullet go");
 
-            AudioManager.Instance.Play3D(playerShootingAudio, transform.position);
-
+            randomSoundPitch(playerShootingAudio);
             VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
+
         }
+    }
+
+    void randomSoundPitch(AudioClip sound)
+    {
+        int[] pentatonicSemitones = new[] { 0, 2, 4, 7, 9 };
+        float pitch = 1;
+        int semitone = pentatonicSemitones[Random.Range(0, pentatonicSemitones.Length)];
+
+        pitch *= Mathf.Pow(1.059463f, semitone); //randomise pitch according to a pentatonic scale
+        
+        audioPrefabScript.GetComponent<AudioSource>().pitch = pitch;    //apply pitch
+        audioPrefabScript.GetComponent<AudioSource>().volume = Random.Range(0.6f, 1); //randomise volume
+        //Debug.Log(audioPrefabScript.GetComponent<AudioSource>().pitch);
+        AudioManager.Instance.Play3D(sound, transform.position);//play sound
     }
 
 }

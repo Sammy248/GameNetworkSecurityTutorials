@@ -1,23 +1,25 @@
 using Photon.Pun;
+using Photon.Pun.UtilityScripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 
-public class Multiplayer : MonoBehaviour
+public class Multiplayer : MonoBehaviour, IPunObservable
 {
     public float movementSpeed = 10f;
 
-    Rigidbody rigidbody;
+    Rigidbody rb;
 
     public float fireRate = 0.75f;
-    public GameObject bulletPrefab;
+    public GameObject[] bulletPrefab;
     public Transform bulletPosition;
     float nextFire;
 
     public GameObject bulletFiringEffect;
 
+    public GameObject audioPrefabScript;
 
     public AudioClip playerShootingAudio;
 
@@ -27,7 +29,7 @@ public class Multiplayer : MonoBehaviour
     public Slider healthBar;
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         photonView = GetComponent<PhotonView>();
     }
 
@@ -41,31 +43,36 @@ public class Multiplayer : MonoBehaviour
         Move();
 
         if (Input.GetKey(KeyCode.Space))
-            Fire();
+        {
+            photonView.RPC("Fire", RpcTarget.AllViaServer);
+
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            BulletController bullet = collision.gameObject.GetComponent<BulletController>();
-            TakeDamage(bullet.damage);
+            MultiplayerBulletController bullet = collision.gameObject.GetComponent<MultiplayerBulletController>();
+            TakeDamage(bullet);
         }
     }
 
-    void TakeDamage(int damage)
+    void TakeDamage(MultiplayerBulletController bullet)
     {
-        health -= damage;
+        health -= bullet.damage;
         healthBar.value = health;
         if (health <= 0)
         {
+            bullet.owner.AddScore(1);
             PlayerDied();
         }
     }
 
     void PlayerDied()
     {
-        gameObject.SetActive(false);
+        health = 100;
+        healthBar.value = health;
     }
 
     void Move()
@@ -80,24 +87,49 @@ public class Multiplayer : MonoBehaviour
         transform.rotation = rotation;
 
         Vector3 movementDir = transform.forward * Time.deltaTime * movementSpeed;
-        rigidbody.MovePosition(rigidbody.position + movementDir);
+        rb.MovePosition(rb.position + movementDir);
     }
 
+    public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
+    {
+        if (stream.IsWriting)
+        {
+            stream.SendNext(health);
+        }
+        else
+        {
+            health = (int)stream.ReceiveNext();
+            healthBar.value = health;
+        }
+    }
 
+    [PunRPC]
     void Fire()
     {
         if (Time.time > nextFire)
         {
             nextFire = Time.time + fireRate;
 
-            GameObject bullet = Instantiate(bulletPrefab, bulletPosition.position, Quaternion.identity);
+            GameObject bullet = Instantiate(bulletPrefab[Random.Range(0, bulletPrefab.Length)],
+                            bulletPosition.position, Quaternion.identity);
+            bullet.GetComponent<MultiplayerBulletController>()?.InitializeBullet(transform.rotation * Vector3.forward, photonView.Owner);
 
-            bullet.GetComponent<BulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
-
-            AudioManager.Instance.Play3D(playerShootingAudio, transform.position);
-
+            randomSoundPitch(playerShootingAudio);
             VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
         }
     }
 
+    void randomSoundPitch(AudioClip sound)
+    {
+        int[] pentatonicSemitones = new[] { 0, 2, 4, 7, 9 };
+        float pitch = 1;
+        int semitone = pentatonicSemitones[Random.Range(0, pentatonicSemitones.Length)];
+
+        pitch *= Mathf.Pow(1.059463f, semitone); //randomise pitch according to a pentatonic scale
+
+        audioPrefabScript.GetComponent<AudioSource>().pitch = pitch;    //apply pitch
+        audioPrefabScript.GetComponent<AudioSource>().volume = Random.Range(0.6f, 1); //randomise volume
+        //Debug.Log(audioPrefabScript.GetComponent<AudioSource>().pitch);
+        AudioManager.Instance.Play3D(sound, transform.position);//play sound
+    }
 }
