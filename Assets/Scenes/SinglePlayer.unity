@@ -2386,6 +2386,14 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7523163996370865487, guid: 4d22f5c42876b4f46b0af112bfcd84df, type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 2498108459180963871, guid: ec707ade61c0c8146aad9c5b8286ac54, type: 3}
+    - target: {fileID: 8288608546064000534, guid: 4d22f5c42876b4f46b0af112bfcd84df, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.89
+      objectReference: {fileID: 0}
     - target: {fileID: 8950791175347043672, guid: 4d22f5c42876b4f46b0af112bfcd84df, type: 3}
       propertyPath: m_LocalPosition.x
       value: 3.42

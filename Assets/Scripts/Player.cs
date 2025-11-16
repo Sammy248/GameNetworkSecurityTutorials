@@ -7,15 +7,13 @@ using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     public float movementSpeed = 10f;
-
+    float[] bulletSpeed = { 1f, 2f};
     Rigidbody rb;
 
     public float[] fireRate = { 0.75f, 1.0f };
     public GameObject[] bulletPrefab;
     public Transform bulletPosition;
     float nextFire;
-
-    
 
     public GameObject audioPrefabScript;
 
@@ -102,8 +100,10 @@ public class Player : MonoBehaviour
                         bulletPosition.position, Quaternion.identity);
 
                     ////change colour of bullet randomly
-                    bulletPrefab[type].GetComponent<Renderer>().sharedMaterial.SetColor("_Color", Color.red);
-                    bullet.GetComponent<BulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
+                    randomColourPick(type);
+
+                    bullet.GetComponent<BulletController>()?.
+                        InitializeBullet(transform.rotation * Vector3.forward);
                     Debug.Log("ooee bullet go");
 
                     randomSoundPitch(playerShootingAudio);
@@ -120,9 +120,11 @@ public class Player : MonoBehaviour
                     GameObject bullet = Instantiate(bulletPrefab[type],
                         bulletPosition.position, Quaternion.identity);
 
+                    randomColourPick(type);
 
-                    bullet.GetComponent<BulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
-                    Debug.Log("ooee bullet go");
+                    bullet.GetComponent<BulletController>()?.
+                        InitializeBullet(transform.rotation * Vector3.forward * bulletSpeed[1]);
+                    //Debug.Log("ooee bullet go");
 
                     randomSoundPitch(playerShootingAudio);
                     VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
@@ -145,5 +147,32 @@ public class Player : MonoBehaviour
         //Debug.Log(audioPrefabScript.GetComponent<AudioSource>().pitch);
         AudioManager.Instance.Play3D(sound, transform.position);//play sound
     }
+    void randomColourPick(int type)
+    {
+        int i = Random.Range(0, 4);
+                    switch (i)
+                    {
+                        case 0:
+                            bulletPrefab[type].GetComponent<Renderer>().
+                        sharedMaterial.SetColor("_Color", Color.red);
+                            break;
+                        case 1:
+                            bulletPrefab[type].GetComponent<Renderer>().
+                        sharedMaterial.SetColor("_Color", Color.yellow);
+                            break;
+                        case 2:
+                            bulletPrefab[type].GetComponent<Renderer>().
+                        sharedMaterial.SetColor("_Color", Color.magenta);
+                            break;
+                        case 3:
+                            bulletPrefab[type].GetComponent<Renderer>().
+                        sharedMaterial.SetColor("_Color", Color.green);
+                            break;
+                        case 4:
+                            bulletPrefab[type].GetComponent<Renderer>().
+                        sharedMaterial.SetColor("_Color", Color.cyan);
+                            break;
 
+                    }
+    }
 }

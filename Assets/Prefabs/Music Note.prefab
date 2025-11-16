@@ -80,6 +80,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Music Note
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 647b910d3bc121242b3ec6c88639db84, type: 3}
+      propertyPath: m_TagString
+      value: Bullet
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -89,10 +93,10 @@ PrefabInstance:
       addedObject: {fileID: 5516027262760129245}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 647b910d3bc121242b3ec6c88639db84, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4400862311279205038}
+      addedObject: {fileID: 4285638314496618015}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 647b910d3bc121242b3ec6c88639db84, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 4285638314496618015}
+      addedObject: {fileID: 1774968250295876316}
   m_SourcePrefab: {fileID: 100100000, guid: 647b910d3bc121242b3ec6c88639db84, type: 3}
 --- !u!1 &1310324228276912104 stripped
 GameObject:
@@ -126,27 +130,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &4400862311279205038
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1310324228276912104}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 0.021426782, y: 0.07162056, z: 0.04}
-  m_Center: {x: -0.000050843228, y: 0.02068755, z: -0.007325897}
 --- !u!114 &4285638314496618015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -164,3 +147,24 @@ MonoBehaviour:
   bulletImpactEffect: {fileID: 1000010321467122, guid: 0b39af0d39f5fe443807a910bd327abe, type: 3}
   audioPrefabScript: {fileID: 9019288755633517005, guid: 131d6e5b6e1184b45aaf7be174502842, type: 3}
   BulletHitAudio: {fileID: 8300000, guid: 55c030d3c6b3b674e9bdd7449446236c, type: 3}
+--- !u!135 &1774968250295876316
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1310324228276912104}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Radius: 0.03581028
+  m_Center: {x: -0.000050843228, y: 0.02068755, z: -0.007325897}

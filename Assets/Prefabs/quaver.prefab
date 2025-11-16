@@ -76,6 +76,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: quaver
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 18f2d9bedd1e3b642996e6421f6c20e6, type: 3}
+      propertyPath: m_TagString
+      value: Bullet
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -117,7 +121,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -141,7 +145,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.021426782, y: 0.092765056, z: 0.1}
+  m_Size: {x: 0.08, y: 0.12, z: 0.1}
   m_Center: {x: -0.000050843228, y: 0.031259794, z: 0.023886174}
 --- !u!114 &3829212306290345437
 MonoBehaviour:
@@ -155,7 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3dc4421bc8bb1714eaae6059a71f5c0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
+  damage: 34
   bulletSpeed: 15
   bulletImpactEffect: {fileID: 1000010321467122, guid: 0b39af0d39f5fe443807a910bd327abe, type: 3}
   audioPrefabScript: {fileID: 9019288755633517005, guid: 131d6e5b6e1184b45aaf7be174502842, type: 3}
