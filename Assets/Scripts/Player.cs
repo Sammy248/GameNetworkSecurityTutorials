@@ -10,10 +10,12 @@ public class Player : MonoBehaviour
 
     Rigidbody rb;
 
-    public float fireRate = 0.75f;
+    public float[] fireRate = { 0.75f, 1.0f };
     public GameObject[] bulletPrefab;
     public Transform bulletPosition;
     float nextFire;
+
+    
 
     public GameObject audioPrefabScript;
 
@@ -29,13 +31,18 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        Debug.Log(fireRate.Length);
     }
 
     void FixedUpdate()
     {
         Move();
         if (Input.GetKey(KeyCode.Space))
-            Fire();
+            Fire(0);
+        if (Input.GetKey(KeyCode.Q))
+        {
+            Fire(1);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -81,23 +88,47 @@ public class Player : MonoBehaviour
     }
 
 
-    void Fire() 
+    void Fire(int type) 
     {
-        if (Time.time > nextFire) 
+        switch (type)
         {
-            
-            nextFire = Time.time + fireRate;
+            case 0:
+                if (Time.time > nextFire)
+                {
+                    Debug.Log("FireRate 1" + fireRate[type]);
+                    nextFire = Time.time + fireRate[0];
 
-            GameObject bullet = Instantiate(bulletPrefab[Random.Range(0, bulletPrefab.Length)],
-                bulletPosition.position, Quaternion.identity);
+                    GameObject bullet = Instantiate(bulletPrefab[type],
+                        bulletPosition.position, Quaternion.identity);
+
+                    ////change colour of bullet randomly
+                    bulletPrefab[type].GetComponent<Renderer>().sharedMaterial.SetColor("_Color", Color.red);
+                    bullet.GetComponent<BulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
+                    Debug.Log("ooee bullet go");
+
+                    randomSoundPitch(playerShootingAudio);
+                    VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
+
+                }
+                break;
+            case 1:
+                if (Time.time > nextFire)
+                {
+
+                    nextFire = Time.time + fireRate[1];
+
+                    GameObject bullet = Instantiate(bulletPrefab[type],
+                        bulletPosition.position, Quaternion.identity);
 
 
-            bullet.GetComponent<BulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
-            Debug.Log("ooee bullet go");
+                    bullet.GetComponent<BulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
+                    Debug.Log("ooee bullet go");
 
-            randomSoundPitch(playerShootingAudio);
-            VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
+                    randomSoundPitch(playerShootingAudio);
+                    VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
 
+                }
+                break;
         }
     }
 
