@@ -10,7 +10,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
 {
     public float movementSpeed = 10f;
 
-    Rigidbody rigidbody;
+    Rigidbody rb;
 
     public float fireRate = 0.75f;
     public GameObject[] bulletPrefab;
@@ -29,7 +29,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
     public Slider healthBar;
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
         photonView = GetComponent<PhotonView>();
     }
 
@@ -87,7 +87,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
         transform.rotation = rotation;
 
         Vector3 movementDir = transform.forward * Time.deltaTime * movementSpeed;
-        rigidbody.MovePosition(rigidbody.position + movementDir);
+        rb.MovePosition(rb.position + movementDir);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)

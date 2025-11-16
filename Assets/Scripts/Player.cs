@@ -8,7 +8,7 @@ public class Player : MonoBehaviour
 {
     public float movementSpeed = 10f;
 
-    Rigidbody rigidbody;
+    Rigidbody rb;
 
     public float fireRate = 0.75f;
     public GameObject[] bulletPrefab;
@@ -28,7 +28,7 @@ public class Player : MonoBehaviour
     public Slider healthBar;
     void Start()
     {
-        rigidbody = GetComponent<Rigidbody>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void FixedUpdate()
@@ -64,11 +64,12 @@ public class Player : MonoBehaviour
 
     void Move()
     {
+        
         if (Input.GetAxisRaw("Horizontal") == 0 && Input.GetAxisRaw("Vertical") == 0)
         {
             return;
         }
-
+        
         var horizontalInput = Input.GetAxis("Horizontal");
         var verticalInput = Input.GetAxis("Vertical");
 
@@ -76,7 +77,7 @@ public class Player : MonoBehaviour
         transform.rotation = rotation;
 
         Vector3 movementDir = transform.forward * Time.deltaTime * movementSpeed;
-        rigidbody.MovePosition(rigidbody.position + movementDir);
+        rb.MovePosition(rb.position + movementDir);
     }
 
 
