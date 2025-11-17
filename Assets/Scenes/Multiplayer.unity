@@ -2487,6 +2487,11 @@ MonoBehaviour:
   gameOverPopUp: {fileID: 250993743}
   winnerText: {fileID: 250993744}
   players: []
+  sTransform:
+  - {fileID: 816091723}
+  - {fileID: 798348716}
+  - {fileID: 96486457}
+  - {fileID: 227134486}
   spawnPositions: []
 --- !u!1001 &1012405976
 PrefabInstance:

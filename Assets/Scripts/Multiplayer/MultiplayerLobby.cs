@@ -68,6 +68,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
             playerListEntry.GetComponent<Text>().text = player.NickName;
             playerListEntry.name = player.NickName;
         }
+        PhotonNetwork.Instantiate("Idiot Player", Vector3.zero, Quaternion.identity);
     }
     public void LeaveRoom()
     {
