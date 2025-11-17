@@ -40,13 +40,17 @@ public class Multiplayer : MonoBehaviour, IPunObservable
         {
             return;
         }
-        
+
         Move();
 
         if (Input.GetKey(KeyCode.Space))
         {
-            photonView.RPC("Fire", RpcTarget.AllViaServer);
+            photonView.RPC("Fire", RpcTarget.AllViaServer, 0);
 
+        }
+        if (Input.GetKey(KeyCode.Q))
+        {
+            photonView.RPC("Fire", RpcTarget.AllViaServer, 1);
         }
     }
 
@@ -121,9 +125,11 @@ public class Multiplayer : MonoBehaviour, IPunObservable
                     ////change colour of bullet randomly
                     randomColourPick(type);
 
-                    bullet.GetComponent<BulletController>()?.
-                        InitializeBullet(transform.rotation * Vector3.forward);
+                    bullet.GetComponent<MultiplayerBulletController>()?.
+                        InitializeBullet(transform.rotation * Vector3.forward, photonView.Owner);
                     Debug.Log("ooee bullet go");
+
+                    //bullet.GetComponent<MultiplayerBulletController>()?.InitializeBullet(transform.rotation * Vector3.forward, photonView.Owner);
 
                     randomSoundPitch(playerShootingAudio);
                     VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
@@ -141,8 +147,8 @@ public class Multiplayer : MonoBehaviour, IPunObservable
 
                     randomColourPick(type);
 
-                    bullet.GetComponent<BulletController>()?.
-                        InitializeBullet(transform.rotation * Vector3.forward * bulletSpeed[1]);
+                    bullet.GetComponent<MultiplayerBulletController>()?.
+                        InitializeBullet(transform.rotation * Vector3.forward * bulletSpeed[1], photonView.Owner);
                     //Debug.Log("ooee bullet go");
 
                     randomSoundPitch(playerShootingAudio);
