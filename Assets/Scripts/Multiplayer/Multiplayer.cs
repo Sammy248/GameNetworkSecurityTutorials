@@ -10,7 +10,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
 {
     public float movementSpeed = 10f;
     float[] bulletSpeed = { 1f, 2f };
-
+    int[] bulletDamage = { 10, 20 };
     Rigidbody rb;
 
     public float[] fireRate = { 0.75f, 1.0f };
@@ -51,6 +51,10 @@ public class Multiplayer : MonoBehaviour, IPunObservable
         if (Input.GetKey(KeyCode.Q))
         {
             photonView.RPC("Fire", RpcTarget.AllViaServer, 1);
+        }
+        if (Input.GetKey(KeyCode.E))
+        {
+            photonView.RPC("Fire", RpcTarget.AllViaServer, 2);
         }
     }
 
@@ -126,7 +130,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
                     randomColourPick(type);
 
                     bullet.GetComponent<MultiplayerBulletController>()?.
-                        InitializeBullet(transform.rotation * Vector3.forward, photonView.Owner);
+                        InitializeBullet(transform.rotation * Vector3.forward, bulletDamage[type], photonView.Owner);
                     Debug.Log("ooee bullet go");
 
                     //bullet.GetComponent<MultiplayerBulletController>()?.InitializeBullet(transform.rotation * Vector3.forward, photonView.Owner);
@@ -148,7 +152,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
                     randomColourPick(type);
 
                     bullet.GetComponent<MultiplayerBulletController>()?.
-                        InitializeBullet(transform.rotation * Vector3.forward * bulletSpeed[1], photonView.Owner);
+                        InitializeBullet(transform.rotation * Vector3.forward * bulletSpeed[1], bulletDamage[type], photonView.Owner);
                     //Debug.Log("ooee bullet go");
 
                     randomSoundPitch(playerShootingAudio);
@@ -156,6 +160,27 @@ public class Multiplayer : MonoBehaviour, IPunObservable
 
                 }
                 break;
+            case 2: //insta kill
+                if (Time.time > nextFire)
+                {
+
+                    nextFire = Time.time + fireRate[0];
+
+                    GameObject bullet = Instantiate(bulletPrefab[1],
+                        bulletPosition.position, Quaternion.identity);
+
+                    randomColourPick(1);
+
+                    bullet.GetComponent<MultiplayerBulletController>()?.
+                        InitializeBullet(transform.rotation * Vector3.forward * bulletSpeed[1], 100, photonView.Owner);
+                    //Debug.Log("ooee bullet go");
+
+                    randomSoundPitch(playerShootingAudio);
+                    VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
+
+                }
+                break;
+
         }
     }
     void randomSoundPitch(AudioClip sound)

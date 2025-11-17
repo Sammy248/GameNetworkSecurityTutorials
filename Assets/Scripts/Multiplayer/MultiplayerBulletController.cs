@@ -32,12 +32,12 @@ public class MultiplayerBulletController : MonoBehaviourPunCallbacks
             print("Rigidbody isn't found!");
     }
 
-    public void InitializeBullet(Vector3 originalDirection, Photon.Realtime.Player givenPlayer)
+    public void InitializeBullet(Vector3 originalDirection,int bDamage, Photon.Realtime.Player givenPlayer)
     {
         //print(originalDirection);
         transform.forward = originalDirection;
         rigidBody.linearVelocity = transform.forward * bulletSpeed;
-
+        damage = bDamage;
         owner = givenPlayer;
 
     }

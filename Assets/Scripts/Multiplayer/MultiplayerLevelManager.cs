@@ -11,9 +11,11 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
     public int maxKills = 3;
     public GameObject gameOverPopUp;
     public Text winnerText;
+    public GameObject[] players;
+    public Vector3[] spawnPositions;
     void Start()
     {
-        PhotonNetwork.Instantiate("Multiplayer Player",Vector3.zero,Quaternion.identity);
+        PhotonNetwork.Instantiate("Multiplayer Player", Vector3.zero,Quaternion.identity);
     }
     public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
     {
@@ -39,5 +41,32 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
         SceneManager.LoadScene("Lobby");
     }
 
-
+    void getPlayers()
+    {
+        players = GameObject.FindGameObjectsWithTag("Player");
+    }
+    public void NewGame()
+    {
+        /*
+        int playerCount = PhotonNetwork.CountOfPlayers;
+        Debug.Log("There are" + playerCount + " players");
+        if (playerCount >= 2)
+        {
+            foreach(GameObject p in players)
+            {
+                if (p.GetComponent<PhotonView>().IsMine)
+                {
+                  if (p!= null)
+                  {
+                        p.GetComponent<Transform>() = spawnPositions[0];
+                  }
+                }
+                  
+            }
+            Photon.Realtime.Player targetPlayer = ;
+            targetPlayer.SetScore(0);
+            targetPlayer.get
+        }
+        */
+    }
 }
