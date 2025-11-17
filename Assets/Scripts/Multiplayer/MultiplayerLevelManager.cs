@@ -15,15 +15,20 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
 
     public Transform[] sTransform;
-    public Vector3[] spawnPositions;
+    //public
 
     void Start()
     {
-        spawnPositions[0] = sTransform[0].position;
-        spawnPositions[1] = sTransform[1].position;
-        spawnPositions[2] = sTransform[2].position;
-        spawnPositions[3] = sTransform[3].position;
-        PhotonNetwork.Instantiate("Multiplayer Player", spawnPositions[0],Quaternion.identity);
+        int spawnIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1; //give each player a number for spawning
+        Vector3[] spawnPositions = new Vector3[4];  // create the 4 spawn positions
+        spawnIndex = Mathf.Clamp(spawnIndex, 0, spawnPositions.Length - 1); //keep spawnindex at max spawnpoints
+        
+        for (int i = 0; i<4; i++)   //assigns each position to where i have placed 4 gameobjects in the scene
+        {
+            spawnPositions[i] = sTransform[i].position;
+        }
+        PhotonNetwork.Instantiate("Multiplayer Player", //create player
+            spawnPositions[spawnIndex], Quaternion.identity);
     }
     public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, Hashtable changedProps)
     {
