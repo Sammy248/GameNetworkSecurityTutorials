@@ -11,12 +11,12 @@ public class CameraTracking : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //cameraOffset = transform.position - playerCharacter.position;
+        cameraOffset = transform.position - playerCharacter.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //transform.position = playerCharacter.position + cameraOffset;
+        transform.position = playerCharacter.position + cameraOffset;
     }
 }
