@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,8 @@ public class Player : MonoBehaviour
     public GameObject[] bulletPrefab;
     public Transform bulletPosition;
     float nextFire;
+
+    public GameObject levelManager;
 
     public GameObject audioPrefabScript;
 
@@ -40,6 +43,8 @@ public class Player : MonoBehaviour
         {
             Fire(1);
         }
+
+        
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -63,7 +68,9 @@ public class Player : MonoBehaviour
 
     void PlayerDied()
     {
+        Debug.Log("Dead");
         gameObject.SetActive(false);
+        levelManager.GetComponent<LevelManagerScript>().onPlayerKilledAction();
     }
 
     void Move()

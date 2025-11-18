@@ -24,11 +24,13 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
     float timer;
 
+
     Vector3 initialSpawnPos;
 
 
     void Start()
     {
+
         _photonView = GetComponent<PhotonView>();
 
         spawnIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1; //give each player a number for spawning
@@ -48,7 +50,6 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
     void Update()
     {
         timer -= Time.deltaTime;
-        Debug.Log(timer);
         if (timer>= 0)
         {
             timerText.text = timer.ToString();
@@ -89,10 +90,8 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void NewGame()
     {
-        
-        int playerCount = PhotonNetwork.CountOfPlayers;
-        Debug.Log("There are" + playerCount + " players");
-        if (playerCount >= 1)
+;
+        if (PhotonNetwork.PlayerList.Length >= 2)
         {
             //photonView.RPC("ResetPlayer", RpcTarget.AllViaServer);
             ResetPlayer();
