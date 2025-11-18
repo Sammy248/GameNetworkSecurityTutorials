@@ -16,6 +16,7 @@ public class PersonalBestPopup : MonoBehaviour
         PlayerData playerData = GameManager.instance.playerData;
         if (playerData.username != null)
         {
+            Debug.Log("Data exists");
             userName.text = playerData.username;
             bestScore.text = playerData.bestScore.ToString();
             date.text = playerData.bestScoreDate;
