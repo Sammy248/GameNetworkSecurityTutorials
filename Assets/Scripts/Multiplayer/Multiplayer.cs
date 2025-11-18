@@ -133,6 +133,8 @@ public class Multiplayer : MonoBehaviour, IPunObservable
                         InitializeBullet(transform.rotation * Vector3.forward, bulletDamage[type], photonView.Owner);
                     Debug.Log("ooee bullet go");
 
+                    
+
                     //bullet.GetComponent<MultiplayerBulletController>()?.InitializeBullet(transform.rotation * Vector3.forward, photonView.Owner);
 
                     randomSoundPitch(playerShootingAudio);
@@ -147,7 +149,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
                     nextFire = Time.time + fireRate[1];
 
                     GameObject bullet = Instantiate(bulletPrefab[type],
-                        bulletPosition.position, Quaternion.identity);
+                        bulletPosition.position, Camera.main.transform.rotation);
 
                     randomColourPick(type);
 
