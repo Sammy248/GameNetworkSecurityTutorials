@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
+using System;
 
 public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 {
@@ -68,8 +69,23 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
         {            
             winnerText.text = targetPlayer.NickName;
             gameOverPopUp.SetActive(true);
+            StorePersonalBest();
+        }        
+    }
+    void StorePersonalBest()
+    {
+        int currentScore = PhotonNetwork.LocalPlayer.GetScore();
+        PlayerData playerData = GameManager.instance.playerData;
+        if (currentScore > playerData.bestScore)
+        {
+            playerData.username = PhotonNetwork.LocalPlayer.NickName;
+            playerData.bestScore = currentScore;
+            playerData.bestScoreDate = DateTime.UtcNow.ToString();
+            playerData.totalPlayersInGame = PhotonNetwork.CurrentRoom.PlayerCount;
+            playerData.roomName = PhotonNetwork.CurrentRoom.Name;
+
+            GameManager.instance.SavePlayerData();
         }
-        
     }
 
     public void LeaveGame()
