@@ -7,14 +7,14 @@ public class LevelManagerScript : MonoBehaviour
     public Text enemiesText;
     private void Awake()
     {
-        int enemies = GameObject.FindGameObjectsWithTag("Enemy").Length;
+        enemies = GameObject.FindGameObjectsWithTag("Enemy").Length;
 
         enemiesText.text = enemies.ToString();
 
         Enemy.onEnemyKilled += onEnemyKilledAction;
     }
     void onEnemyKilledAction()
-    {
+    {        
         enemies--;
         enemiesText.text = enemies.ToString();
     }

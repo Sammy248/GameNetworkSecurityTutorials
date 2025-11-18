@@ -80,6 +80,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
 
     void PlayerDied()
     {
+        transform.position = new Vector3 (0,1,0);
         health = 100;
         healthBar.value = health;
     }
@@ -149,7 +150,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
                     nextFire = Time.time + fireRate[1];
 
                     GameObject bullet = Instantiate(bulletPrefab[type],
-                        bulletPosition.position, Camera.main.transform.rotation);
+                        bulletPosition.position, Quaternion.identity);
 
                     randomColourPick(type);
 

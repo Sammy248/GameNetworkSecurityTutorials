@@ -96,7 +96,7 @@ public class Player : MonoBehaviour
                     nextFire = Time.time + fireRate[0];
 
                     GameObject bullet = Instantiate(bulletPrefab[type],
-                        bulletPosition.position, Quaternion.identity);
+                        bulletPosition.position, Camera.main.transform.rotation);
 
                     ////change colour of bullet randomly
                     randomColourPick(type);
@@ -149,29 +149,29 @@ public class Player : MonoBehaviour
     void randomColourPick(int type)
     {
         int i = Random.Range(0, 4);
-                    switch (i)
-                    {
-                        case 0:
-                            bulletPrefab[type].GetComponent<Renderer>().
-                        sharedMaterial.SetColor("_Color", Color.red);
-                            break;
-                        case 1:
-                            bulletPrefab[type].GetComponent<Renderer>().
-                        sharedMaterial.SetColor("_Color", Color.yellow);
-                            break;
-                        case 2:
-                            bulletPrefab[type].GetComponent<Renderer>().
-                        sharedMaterial.SetColor("_Color", Color.magenta);
-                            break;
-                        case 3:
-                            bulletPrefab[type].GetComponent<Renderer>().
-                        sharedMaterial.SetColor("_Color", Color.green);
-                            break;
-                        case 4:
-                            bulletPrefab[type].GetComponent<Renderer>().
-                        sharedMaterial.SetColor("_Color", Color.cyan);
-                            break;
+        switch (i)
+        {
+            case 0:
+                bulletPrefab[type].GetComponent<Renderer>().
+            sharedMaterial.SetColor("_Color", Color.red);
+                break;
+            case 1:
+                bulletPrefab[type].GetComponent<Renderer>().
+            sharedMaterial.SetColor("_Color", Color.yellow);
+                break;
+            case 2:
+                bulletPrefab[type].GetComponent<Renderer>().
+            sharedMaterial.SetColor("_Color", Color.magenta);
+                break;
+            case 3:
+                bulletPrefab[type].GetComponent<Renderer>().
+            sharedMaterial.SetColor("_Color", Color.green);
+                break;
+            case 4:
+                bulletPrefab[type].GetComponent<Renderer>().
+            sharedMaterial.SetColor("_Color", Color.cyan);
+                break;
 
-                    }
+        }
     }
 }

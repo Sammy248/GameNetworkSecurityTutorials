@@ -85,6 +85,7 @@ MonoBehaviour:
   bulletPosition: {fileID: 8288608546064000534}
   bulletFiringEffect: {fileID: 1000011513120438, guid: f70d27f5cf28c8941bbfd6febd74797f, type: 3}
   playerShootingAudio: {fileID: 8300000, guid: 9d685be7bcccd974bb6312c9965ff4e5, type: 3}
+  deathSound: {fileID: 8300000, guid: 78261d3eb943f724c9620972e2e498e2, type: 3}
   health: 100
   healthBar: {fileID: 7188117192081171791}
 --- !u!54 &3783586976833897617

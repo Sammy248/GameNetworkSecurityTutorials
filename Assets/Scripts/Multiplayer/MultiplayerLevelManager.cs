@@ -43,7 +43,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
             spawnPositions[spawnIndex], Quaternion.identity);
 
         //set timer
-        timer = 10;
+        timer = 100;
     }
     void Update()
     {
@@ -96,7 +96,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
         {
             //photonView.RPC("ResetPlayer", RpcTarget.AllViaServer);
             ResetPlayer();
-            timer = 10;
+            timer = 100;
             if (!photonView.IsMine)
             {
                 return;
