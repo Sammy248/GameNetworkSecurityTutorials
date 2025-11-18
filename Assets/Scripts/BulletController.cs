@@ -38,7 +38,7 @@ public class BulletController : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         audioPrefabScript.GetComponent<AudioSource>().pitch = Random.Range(0.8f, 1.5f);
-        Debug.Log(audioPrefabScript.GetComponent<AudioSource>().pitch);
+        //Debug.Log(audioPrefabScript.GetComponent<AudioSource>().pitch);
         AudioManager.Instance.Play3D(BulletHitAudio, transform.position);
 
         VFXManager.Instance.PlayVFX(bulletImpactEffect,transform.position);

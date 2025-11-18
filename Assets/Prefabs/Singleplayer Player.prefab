@@ -315,7 +315,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 10
-  fireRate: 0.75
+  fireRate:
+  - 0.75
+  - 1
   bulletPrefab:
   - {fileID: 1310324228276912104, guid: d2bdd40f66b6d5f41bdb93df0858776e, type: 3}
   - {fileID: 5478178028398713248, guid: 5530ded7f631e9d4abd0682a954f1e69, type: 3}

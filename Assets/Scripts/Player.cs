@@ -1,16 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
     public float movementSpeed = 10f;
-
+    float[] bulletSpeed = { 1f, 2f};
     Rigidbody rb;
 
-    public float fireRate = 0.75f;
+    public float[] fireRate = { 0.75f, 1.0f };
     public GameObject[] bulletPrefab;
     public Transform bulletPosition;
     float nextFire;
@@ -29,13 +28,18 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        Debug.Log(fireRate.Length);
     }
 
     void FixedUpdate()
     {
         Move();
         if (Input.GetKey(KeyCode.Space))
-            Fire();
+            Fire(0);
+        if (Input.GetKey(KeyCode.Q))
+        {
+            Fire(1);
+        }
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -81,23 +85,51 @@ public class Player : MonoBehaviour
     }
 
 
-    void Fire() 
+    void Fire(int type) 
     {
-        if (Time.time > nextFire) 
+        switch (type)
         {
-            
-            nextFire = Time.time + fireRate;
+            case 0:
+                if (Time.time > nextFire)
+                {
+                    Debug.Log("FireRate 1" + fireRate[type]);
+                    nextFire = Time.time + fireRate[0];
 
-            GameObject bullet = Instantiate(bulletPrefab[Random.Range(0, bulletPrefab.Length)],
-                bulletPosition.position, Quaternion.identity);
+                    GameObject bullet = Instantiate(bulletPrefab[type],
+                        bulletPosition.position, Camera.main.transform.rotation);
 
+                    ////change colour of bullet randomly
+                    randomColourPick(type);
 
-            bullet.GetComponent<BulletController>()?.InitializeBullet(transform.rotation * Vector3.forward);
-            Debug.Log("ooee bullet go");
+                    bullet.GetComponent<BulletController>()?.
+                        InitializeBullet(transform.rotation * Vector3.forward);
+                    Debug.Log("ooee bullet go");
 
-            randomSoundPitch(playerShootingAudio);
-            VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
+                    randomSoundPitch(playerShootingAudio);
+                    VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
 
+                }
+                break;
+            case 1:
+                if (Time.time > nextFire)
+                {
+
+                    nextFire = Time.time + fireRate[1];
+
+                    GameObject bullet = Instantiate(bulletPrefab[type],
+                        bulletPosition.position, Quaternion.identity);
+
+                    randomColourPick(type);
+
+                    bullet.GetComponent<BulletController>()?.
+                        InitializeBullet(transform.rotation * Vector3.forward * bulletSpeed[1]);
+                    //Debug.Log("ooee bullet go");
+
+                    randomSoundPitch(playerShootingAudio);
+                    VFXManager.Instance.PlayVFX(bulletFiringEffect, bulletPosition.position);
+
+                }
+                break;
         }
     }
 
@@ -114,5 +146,32 @@ public class Player : MonoBehaviour
         //Debug.Log(audioPrefabScript.GetComponent<AudioSource>().pitch);
         AudioManager.Instance.Play3D(sound, transform.position);//play sound
     }
+    void randomColourPick(int type)
+    {
+        int i = Random.Range(0, 4);
+        switch (i)
+        {
+            case 0:
+                bulletPrefab[type].GetComponent<Renderer>().
+            sharedMaterial.SetColor("_Color", Color.red);
+                break;
+            case 1:
+                bulletPrefab[type].GetComponent<Renderer>().
+            sharedMaterial.SetColor("_Color", Color.yellow);
+                break;
+            case 2:
+                bulletPrefab[type].GetComponent<Renderer>().
+            sharedMaterial.SetColor("_Color", Color.magenta);
+                break;
+            case 3:
+                bulletPrefab[type].GetComponent<Renderer>().
+            sharedMaterial.SetColor("_Color", Color.green);
+                break;
+            case 4:
+                bulletPrefab[type].GetComponent<Renderer>().
+            sharedMaterial.SetColor("_Color", Color.cyan);
+                break;
 
+        }
+    }
 }

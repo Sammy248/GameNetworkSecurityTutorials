@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     float nextFire;
     public GameObject bulletFiringEffect;
     public AudioClip playerShootingAudio;
+    public AudioClip deathSound;
 
     [HideInInspector]
     public int health = 100;
@@ -51,6 +52,9 @@ public class Enemy : MonoBehaviour
         if (onEnemyKilled != null)
         {
             onEnemyKilled.Invoke();
+            //play noise
+            AudioManager.Instance.Play3D(deathSound, transform.position);//play sound
+
         }
     }
 
