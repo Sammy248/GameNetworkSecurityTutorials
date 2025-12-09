@@ -11,6 +11,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public Transform CreateRoomPanel;
     public Transform InsideRoomPanel;
     public Transform ListRoomsPanel;
+    public Transform chatPanel;
 
     public Transform ListRoomPanel;
     public Transform roomEntryPrefab;
@@ -28,6 +29,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public Transform insideRoomPlayerList;
 
     Dictionary<string, RoomInfo> cachedRoomList;
+    public Chat chat;
 
     private void Start()
     {
@@ -57,6 +59,10 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     }
     public override void OnJoinedRoom()
     {
+        var authenticationValues = new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName);
+        chat.userName = PhotonNetwork.LocalPlayer.NickName;
+        chat.ChatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat,"1.0", authenticationValues);
+
         Debug.Log("Room has been Joined");
         ActivatePanel("InsideRoom");
 
@@ -76,6 +82,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     }
     public override void OnLeftRoom()
     {
+        chat.ChatClient.Disconnect();
         Debug.Log("Room has been left");
         ActivatePanel("CreateRoom");
 
@@ -108,6 +115,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         CreateRoomPanel.gameObject.SetActive(false);
         InsideRoomPanel.gameObject.SetActive(false);
         ListRoomsPanel.gameObject.SetActive(false);
+        chatPanel.gameObject.SetActive(false);
 
         if(panelName == LoginPanel.gameObject.name)
         {
@@ -128,6 +136,10 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         else if (panelName == ListRoomsPanel.gameObject.name)
         {
             ListRoomsPanel.gameObject.SetActive(true);
+        }
+        else if (panelName == chatPanel.gameObject.name)
+        {
+            chatPanel.gameObject.SetActive(true);
         }
     }
 
