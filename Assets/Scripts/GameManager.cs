@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.IO;
 using Leguar.TotalJSON;
+using PlayFab;
+using PlayFab.ClientModels;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +12,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         LoadPlayerData();
+        LoginToPlayFab();
     }
     private void Awake()
     {
@@ -21,6 +24,10 @@ public class GameManager : MonoBehaviour
         {
             Destroy(this);
         }
+    }
+    void LoginToPlayFab()
+    {
+        PlayFabAddonAPI.LoginWithCustomID();
     }
     public void SavePlayerData()
     {
