@@ -13,7 +13,6 @@ public class MPCameraTracking : MonoBehaviour
     GameObject[] players;
 
     public Vector3 cameraOffset = new Vector3(0, 13, -9.87f);
-
     void Start()
     {
         //cameraOffset = transform.position - playerCharacter.position;
