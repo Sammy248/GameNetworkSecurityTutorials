@@ -74,6 +74,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
     }
     void StorePersonalBest()
     {
+        Debug.Log("Store Personal Best");
         int currentScore = PhotonNetwork.LocalPlayer.GetScore();
         PlayerData playerData = GameManager.instance.playerData;
         if (currentScore > playerData.bestScore)
@@ -84,6 +85,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
             playerData.totalPlayersInGame = PhotonNetwork.CurrentRoom.PlayerCount;
             playerData.roomName = PhotonNetwork.CurrentRoom.Name;
 
+            GameManager.instance.globalLeaderboard.SubmitScore(currentScore);
             GameManager.instance.SavePlayerData();
         }
     }

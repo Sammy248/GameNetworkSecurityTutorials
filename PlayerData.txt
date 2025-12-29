@@ -1,1 +1,1 @@
-{"uid":"8a770a31-d6ea-43c6-bd1c-d2b8175710fd","username":null,"bestScore":0,"bestScoreDate":null,"totalPlayersInGame":0,"roomName":null}
+{"uid":"f5d00be3-018a-4a8c-afbb-2ade439749dc","username":"Player 281349","bestScore":3,"bestScoreDate":"29/12/2025 15:54:54","totalPlayersInGame":2,"roomName":"asd"}

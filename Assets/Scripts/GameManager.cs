@@ -9,7 +9,9 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public PlayerData playerData;
-    public string filePath; 
+    public string filePath;
+    public GlobalLeaderboard globalLeaderboard;
+
 
     private void Start()
     {
