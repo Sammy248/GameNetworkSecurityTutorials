@@ -620,9 +620,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1857996076}
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3037877217720389236, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 3037877216990397633, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 983361137}
+      addedObject: {fileID: 1085091307}
   m_SourcePrefab: {fileID: 100100000, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
 --- !u!114 &335864447 stripped
 MonoBehaviour:
@@ -731,9 +731,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0.380678, g: 0.7529412, b: 0.05882353, a: 1}
-    m_HighlightedColor: {r: 0.6415094, g: 0.53048813, b: 0.06354574, a: 1}
-    m_PressedColor: {r: 0.5377358, g: 0.440776, b: 0.03297438, a: 1}
-    m_SelectedColor: {r: 0.6509434, g: 0.53710985, b: 0.05833925, a: 1}
+    m_HighlightedColor: {r: 0.23923841, g: 0.5188679, b: 0, a: 1}
+    m_PressedColor: {r: 0.14354306, g: 0.31132078, b: 0, a: 1}
+    m_SelectedColor: {r: 0.32941177, g: 0.6509804, b: 0.050980397, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -916,18 +916,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   SceneName: SinglePlayer
---- !u!1 &983361132 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3037877217720389236, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
+--- !u!224 &983361141 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 3037877217720389240, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
   m_PrefabInstance: {fileID: 200211247}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &983361137
+--- !u!1 &1085091303 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3037877216990397633, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
+  m_PrefabInstance: {fileID: 200211247}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1085091307
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 983361132}
+  m_GameObject: {fileID: 1085091303}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1021a3c0e6a880488f744a5f93a2f50, type: 3}
@@ -940,16 +945,6 @@ MonoBehaviour:
   date: {fileID: 704611406}
   totalPlayers: {fileID: 485059933}
   roomName: {fileID: 632117617}
---- !u!224 &983361141 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 3037877217720389240, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
-  m_PrefabInstance: {fileID: 200211247}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1085091303 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3037877216990397633, guid: 3d967820da22cf048941e92c246cc0f5, type: 3}
-  m_PrefabInstance: {fileID: 200211247}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1182978724
 GameObject:
   m_ObjectHideFlags: 0

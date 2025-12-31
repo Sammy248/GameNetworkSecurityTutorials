@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using PlayFab.ClientModels;
 using UnityEngine;
-using System.Collections.Generic;
+//using System.Collections.Generic;
 
 public class LeaderboardPopup : MonoBehaviour
 {
@@ -16,7 +16,7 @@ public class LeaderboardPopup : MonoBehaviour
     public void UpdateUI(List<PlayerLeaderboardEntry> playerLeaderboardEntries)
     {
         Debug.Log("entries:" + playerLeaderboardEntries.Count);
-        if (playerLeaderboardEntries.Count > 0)
+        if (playerLeaderboardEntries.Count > 0)         //always has 0
         {
             DestroyChildren(scoreHolder.transform);
             for (int i = 0; i <playerLeaderboardEntries.Count; i++)
