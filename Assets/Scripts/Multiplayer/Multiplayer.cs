@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class Multiplayer : MonoBehaviour, IPunObservable
 {
+    public GameObject chatPanel;
+
     public float movementSpeed = 10f;
     float[] bulletSpeed = { 1f, 2f };
     int[] bulletDamage = { 10, 20 };
@@ -55,6 +57,10 @@ public class Multiplayer : MonoBehaviour, IPunObservable
         if (Input.GetKey(KeyCode.E))
         {
             photonView.RPC("Fire", RpcTarget.AllViaServer, 2);
+        }
+        if (Input.GetKey(KeyCode.T))
+        {
+            ActivateChat();
         }
     }
 
@@ -226,5 +232,10 @@ public class Multiplayer : MonoBehaviour, IPunObservable
                 break;
 
         }
+    }
+    void ActivateChat()
+    {
+        chatPanel.gameObject.SetActive(true);
+
     }
 }

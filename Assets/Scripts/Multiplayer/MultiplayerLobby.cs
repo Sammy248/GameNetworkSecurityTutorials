@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
+using PlayFab;
+using PlayFab.ClientModels;
 
 public class MultiplayerLobby : MonoBehaviourPunCallbacks
 {
@@ -91,16 +93,44 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     }
     public void LoginButtonClicked()
     {
-        PhotonNetwork.LocalPlayer.NickName = playerName = playerNameInput.text;
-        PhotonNetwork.ConnectUsingSettings();
-        ActivatePanel("Selection");
+        if(playerNameInput.text.Trim() != "")
+        {
+            PhotonNetwork.LocalPlayer.NickName = playerName = playerNameInput.text;
+            PhotonNetwork.ConnectUsingSettings();
+            UpdatePlayfabUsername(playerName);
+            ActivatePanel("Selection");
+        }
+        else
+        {
+            Debug.Log("Player Name is Invalid");
+        }
+            
+    }
+    void UpdatePlayfabUsername(string name)
+    {
+        UpdateUserTitleDisplayNameRequest request = new UpdateUserTitleDisplayNameRequest
+        {
+            DisplayName = name,
+        };
+        PlayFabClientAPI.UpdateUserTitleDisplayName(request, PlayFabUpdateUserTitleDisplayNameResult, PlayFabUpdateUserTitleDisplayNameError);
+    }
+    void PlayFabUpdateUserTitleDisplayNameResult(UpdateUserTitleDisplayNameResult updateUserTitleDisplayNameResult)
+    {
+        Debug.Log("PlayFab - UserTitleDisplayName Updated");
+    }
+    void PlayFabUpdateUserTitleDisplayNameError(PlayFabError updateUserTitleDisplayNameError)
+    {
+        Debug.Log("PlayFab - Error occured while updating UserTitleDisplayName: " + updateUserTitleDisplayNameError.ErrorMessage);
     }
 
     public void StartGameClicked()
     {
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
-        PhotonNetwork.LoadLevel("Multiplayer");
+        if (PhotonNetwork.PlayerList.Length >= 2)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+            PhotonNetwork.LoadLevel("Multiplayer");
+        }            
     }
 
     public override void OnConnectedToMaster()

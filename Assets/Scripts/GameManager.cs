@@ -1,9 +1,12 @@
-using UnityEngine;
-using System;
-using System.IO;
 using Leguar.TotalJSON;
 using PlayFab;
 using PlayFab.ClientModels;
+using System;
+using System.IO;
+using System.Text;
+using System.Security;
+using System.Security.Cryptography;
+using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -37,7 +40,6 @@ public class GameManager : MonoBehaviour
             CustomId = playerData.uid,
         };
         PlayFabClientAPI.LoginWithCustomID(request, PlayFabLoginResult, PlayFabLoginError);
-
     }
     void PlayFabLoginResult(LoginResult loginResult)
     {
@@ -48,13 +50,12 @@ public class GameManager : MonoBehaviour
         Debug.Log("PlayFab - Login failed: " + loginError.ErrorMessage);
 
     }
-    //tell j if work
 
     public void SavePlayerData()
     {
         string serialisedDataString = JSON.Serialize(playerData).CreateString();
-        //JSON.Serialize(playerData);
-        File.WriteAllText(filePath, serialisedDataString);
+
+        File.WriteAllText(filePath, Base64Encode(serialisedDataString));  //encode data to base 64 
     }
     public void LoadPlayerData()
     {
@@ -64,6 +65,20 @@ public class GameManager : MonoBehaviour
             SavePlayerData();
         }
         string fileContents = File.ReadAllText(filePath);
-        playerData = JSON.ParseString(fileContents).Deserialize<PlayerData>();
+        string decodedFileContents = Base64Decode(fileContents);
+        playerData = JSON.ParseString(decodedFileContents).Deserialize<PlayerData>();
     }
+
+    public static string Base64Encode(string plainText) //encode data
+    {
+        var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+        return Convert.ToBase64String(plainTextBytes);
+    }
+
+    public static string Base64Decode(string base64EncodedData) //decode data
+    {
+        var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
+        return Encoding.UTF8.GetString(base64EncodedBytes);
+    }
+
 }

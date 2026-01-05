@@ -5,15 +5,16 @@ using System.Collections.Generic;
 
 public class GlobalLeaderboard : MonoBehaviour
 {
+    //public string leaderboardName;
     int maxResults = 5;
     public LeaderboardPopup leaderboardPopup;
-    public void GetLeaderboard()
+    public void GetLeaderboard(string statisticName)
     {
         Debug.Log("Getting leaderboard");
         GetLeaderboardRequest request = new GetLeaderboardRequest()
         {
             MaxResultsCount = maxResults,
-            StatisticName = "MostKills",
+            StatisticName = statisticName,
         };
         PlayFabClientAPI.GetLeaderboard(request, PlayFabGetLeaderboardResult, PlayFabGetLeaderboardError);
     }
@@ -27,7 +28,7 @@ public class GlobalLeaderboard : MonoBehaviour
         Debug.Log("PlayFab - Error occurred while getting Leaderboard: " + getLeaderboardError.ErrorMessage);
 
     }
-    public void SubmitScore(int playerScore)
+    public void SubmitScore(string leaderboardName, int statistic)
     {
         UpdatePlayerStatisticsRequest request = new UpdatePlayerStatisticsRequest()
         {
@@ -35,8 +36,8 @@ public class GlobalLeaderboard : MonoBehaviour
             {
                 new StatisticUpdate()
                 {
-                    StatisticName = "Most Kills",
-                    Value = playerScore
+                    StatisticName = leaderboardName,
+                    Value = statistic
                 }
             }
         };
@@ -52,4 +53,9 @@ public class GlobalLeaderboard : MonoBehaviour
         Debug.Log("PlayFab - Error occurred while submitting score: " + updatePlayerStatisticsError.ErrorMessage);
 
     }
+}
+public static class PlayFabStats
+{
+    public const string MostKills = "Most Kills";
+    public const string QuickestWin = "Quickest Win";
 }
