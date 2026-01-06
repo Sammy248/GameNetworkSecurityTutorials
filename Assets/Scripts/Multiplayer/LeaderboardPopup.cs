@@ -5,16 +5,23 @@ using System.Collections.Generic;
 
 public class LeaderboardPopup : MonoBehaviour
 {
+    public string leaderboardName;
     public GameObject scoreHolder;
     public GameObject noScoreText;
     public GameObject leaderboardItem;
 
     private void OnEnable()
     {
-        GameManager.instance.globalLeaderboard.GetLeaderboard(PlayFabStats.MostKills);
-        //GameManager.instance.globalLeaderboard.GetLeaderboard(PlayFabStats.QuickestWin);
-
+        if (leaderboardName == "MostKills")
+        {
+            GameManager.instance.globalLeaderboard.GetLeaderboard(PlayFabStats.MostKills);
+        }
+        else if(leaderboardName == "QuickestWin")
+        {
+            GameManager.instance.globalLeaderboard.GetLeaderboard(PlayFabStats.QuickestWin);
+        }
     }
+
     public void UpdateUI(List<PlayerLeaderboardEntry> playerLeaderboardEntries)
     {
         Debug.Log("entries:" + playerLeaderboardEntries.Count);

@@ -7,6 +7,7 @@ public class PersonalBestPopup : MonoBehaviour
     public GameObject noScoreText;
     public Text userName;
     public Text bestScore;
+    public Text quickestTime;
     public Text date;
     public Text totalPlayers;
     public Text roomName;
@@ -20,6 +21,7 @@ public class PersonalBestPopup : MonoBehaviour
             userName.text = playerData.username;
             bestScore.text = playerData.bestScore.ToString();
             date.text = playerData.bestScoreDate;
+            quickestTime.text = playerData.quickestTime.ToString();
             totalPlayers.text = playerData.totalPlayersInGame.ToString();
             roomName.text = playerData.roomName;
 

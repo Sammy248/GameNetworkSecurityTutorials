@@ -8,6 +8,8 @@ public class GlobalLeaderboard : MonoBehaviour
     //public string leaderboardName;
     int maxResults = 5;
     public LeaderboardPopup leaderboardPopup;
+    public LeaderboardPopup leaderboardPopup2;
+
     public void GetLeaderboard(string statisticName)
     {
         Debug.Log("Getting leaderboard");
@@ -22,6 +24,8 @@ public class GlobalLeaderboard : MonoBehaviour
     {
         Debug.Log("Playfab - Get Leaderboard completed");
         leaderboardPopup.UpdateUI(getLeaderboardResult.Leaderboard);
+        leaderboardPopup2.UpdateUI(getLeaderboardResult.Leaderboard);
+
     }
     void PlayFabGetLeaderboardError(PlayFabError getLeaderboardError)
     {

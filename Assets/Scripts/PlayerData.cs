@@ -7,6 +7,7 @@ public class PlayerData : MonoBehaviour
     public string uid;
     public string username;
     public int bestScore;
+    public int quickestTime = int.MaxValue;
     public string bestScoreDate;
     public int totalPlayersInGame;
     public string roomName;

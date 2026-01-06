@@ -24,6 +24,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
     public int spawnIndex;
     public Vector3[] spawnPositions;
 
+    float elapsedTime = 0;
     float timer;
 
 
@@ -51,11 +52,11 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
     }
     void Update()
     {
-        while(timerPause == false)
+        if (!timerPause)
         {
             timer -= Time.deltaTime;
-
         }
+ 
         if (timer>= 0)
         {
             timerText.text = timer.ToString();
@@ -75,6 +76,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
             winnerText.text = targetPlayer.NickName;
             gameOverPopUp.SetActive(true);
             timerPause = true;
+            elapsedTime = 100 - timer;
             StorePersonalBest();
         }        
     }
@@ -82,7 +84,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
     {
         Debug.Log("Store Personal Best");
         int kills = PhotonNetwork.LocalPlayer.GetScore();
-        int winTime = (int)timer;
+        int winTime = (int)elapsedTime;
         Debug.Log("Kills: " + kills + " time: " + winTime);
         PlayerData playerData = GameManager.instance.playerData;
         if (kills > playerData.bestScore)
@@ -96,10 +98,10 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
             GameManager.instance.globalLeaderboard.SubmitScore("Most Kills", kills);
             GameManager.instance.SavePlayerData();
         }
-        if (winTime > playerData.bestScore)
+        if (winTime < playerData.quickestTime)
         {
             playerData.username = PhotonNetwork.LocalPlayer.NickName;
-            playerData.bestScore = kills;
+            playerData.quickestTime = winTime;
             playerData.bestScoreDate = DateTime.UtcNow.ToString();
             playerData.totalPlayersInGame = PhotonNetwork.CurrentRoom.PlayerCount;
             playerData.roomName = PhotonNetwork.CurrentRoom.Name;
