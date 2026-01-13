@@ -53,32 +53,28 @@ public class GameManager : MonoBehaviour
 
     public void SavePlayerData()
     {
-        string serialisedDataString = JSON.Serialize(playerData).CreateString();
+        string serializedData = JSON.Serialize(playerData).CreateString(); //Serialization is the process of converting an object or data structure
+                                                                           //into a format that can be easily stored or transmitted
+        string encryptedData = AesEncryption.Encrypt(serializedData);   //sends data to be encrypted
 
-        File.WriteAllText(filePath, Base64Encode(serialisedDataString));  //encode data to base 64 
+        File.WriteAllText(filePath, encryptedData);
     }
+
     public void LoadPlayerData()
     {
         if (!File.Exists(filePath))
         {
             playerData = new PlayerData();
             SavePlayerData();
+            return;
         }
-        string fileContents = File.ReadAllText(filePath);
-        string decodedFileContents = Base64Decode(fileContents);
-        playerData = JSON.ParseString(decodedFileContents).Deserialize<PlayerData>();
+
+        string encryptedFileContents = File.ReadAllText(filePath);
+        string decryptedJson = AesEncryption.Decrypt(encryptedFileContents);
+
+        playerData = JSON.ParseString(decryptedJson).Deserialize<PlayerData>();
     }
 
-    public static string Base64Encode(string plainText) //encode data
-    {
-        var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
-        return Convert.ToBase64String(plainTextBytes);
-    }
-
-    public static string Base64Decode(string base64EncodedData) //decode data
-    {
-        var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
-        return Encoding.UTF8.GetString(base64EncodedBytes);
-    }
 
 }
+

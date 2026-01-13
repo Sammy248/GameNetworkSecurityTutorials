@@ -11,6 +11,10 @@ public class Chat : MonoBehaviour, IChatClientListener
     public InputField inputField;
     public Text ChatContent;
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(gameObject);
+    }
     private void Start()
     {
         ChatClient = new ChatClient(this);

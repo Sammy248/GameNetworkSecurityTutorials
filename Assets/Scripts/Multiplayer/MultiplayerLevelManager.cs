@@ -30,10 +30,10 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
     Vector3 initialSpawnPos;
 
+    public Chat chat;
 
     void Start()
     {
-
         _photonView = GetComponent<PhotonView>();
 
         spawnIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1; //give each player a number for spawning
@@ -49,6 +49,11 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
         //set timer
         timer = 100;
+
+        ////chat function
+        var authenticationValues = new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName);
+        chat.userName = PhotonNetwork.LocalPlayer.NickName;
+        chat.ChatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, "1.0", authenticationValues);
     }
     void Update()
     {
@@ -118,6 +123,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
+        chat.ChatClient.Disconnect();
         PhotonNetwork.Disconnect();
     }
 

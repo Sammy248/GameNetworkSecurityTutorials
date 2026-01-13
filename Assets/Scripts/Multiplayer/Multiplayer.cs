@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class Multiplayer : MonoBehaviour, IPunObservable
 {
-    public GameObject chatPanel;
+    private GameObject chatPanel;
 
     public float movementSpeed = 10f;
     float[] bulletSpeed = { 1f, 2f };
@@ -34,6 +34,12 @@ public class Multiplayer : MonoBehaviour, IPunObservable
     {
         rb = GetComponent<Rigidbody>();
         photonView = GetComponent<PhotonView>();
+
+        if (photonView.IsMine)
+        {
+            chatPanel = GameObject.FindGameObjectWithTag("ChatPanel");
+            chatPanel.SetActive(false);
+        }
     }
 
     void FixedUpdate()
@@ -58,7 +64,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
         {
             photonView.RPC("Fire", RpcTarget.AllViaServer, 2);
         }
-        if (Input.GetKey(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T))
         {
             ActivateChat();
         }
@@ -235,7 +241,10 @@ public class Multiplayer : MonoBehaviour, IPunObservable
     }
     void ActivateChat()
     {
-        chatPanel.gameObject.SetActive(true);
+        if (!photonView.IsMine || chatPanel == null)
+            return;
 
+        chatPanel.SetActive(!chatPanel.activeSelf);
     }
+
 }
