@@ -10,10 +10,15 @@ public class Chat : MonoBehaviour, IChatClientListener
 
     public InputField inputField;
     public Text ChatContent;
+    
+    private bool _isConnected;
+    private bool _isSubscribed;
+    private string _currentChannel;
+
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
     }
     private void Start()
     {

@@ -28,6 +28,8 @@ public class Multiplayer : MonoBehaviour, IPunObservable
 
     PhotonView photonView;
 
+    public Animator anim;
+
     public int health = 100;
     public Slider healthBar;
     void Start()
@@ -67,6 +69,12 @@ public class Multiplayer : MonoBehaviour, IPunObservable
         if (Input.GetKeyDown(KeyCode.T))
         {
             ActivateChat();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))    //Emote
+        {
+            anim.SetTrigger("Dance");
+            ;
         }
     }
 
