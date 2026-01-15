@@ -52,8 +52,6 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
         ////chat function
         var authenticationValues = new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName);
-        chat.userName = PhotonNetwork.LocalPlayer.NickName;
-        chat.ChatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, "1.0", authenticationValues);
     }
     void Update()
     {
@@ -123,7 +121,6 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        chat.ChatClient.Disconnect();
         PhotonNetwork.Disconnect();
     }
 

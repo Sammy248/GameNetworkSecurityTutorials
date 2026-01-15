@@ -5,65 +5,82 @@ using Photon.Pun;
 using UnityEngine.UI;
 public class Chat : MonoBehaviour, IChatClientListener
 {
-    public string userName;
-    public ChatClient ChatClient;
-
     public InputField inputField;
-    public Text ChatContent;
-    
-    private bool _isConnected;
-    private bool _isSubscribed;
-    private string _currentChannel;
+    public Text chatContent;
+    public GameObject chatPanel;
 
+    private ChatClient chatClient;
+    private string channelName;
 
-    private void Awake()
+    void Start()
     {
-        //DontDestroyOnLoad(gameObject);
+        channelName = PhotonNetwork.CurrentRoom.Name;
+
+        var auth = new AuthenticationValues(PhotonNetwork.LocalPlayer.NickName);
+
+        chatClient = new ChatClient(this);
+        chatClient.Connect(
+            PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat,
+            "1.0",
+            auth
+        );
+
+        chatPanel.SetActive(false);
     }
-    private void Start()
+    void Update()
     {
-        ChatClient = new ChatClient(this);
+        chatClient?.Service();
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            chatPanel.SetActive(!chatPanel.activeSelf);
+            if (chatPanel.activeSelf)
+                inputField.ActivateInputField();
+        }
     }
-    private void Update()
+    public void SendMessage()
     {
-        ChatClient.Service();
-    }
-    public void SetMessage()
-    {
-        if (inputField.text == "") return;
-        ChatClient.PublishMessage(PhotonNetwork.CurrentRoom.Name, inputField.text);
+        if (string.IsNullOrWhiteSpace(inputField.text)) return;
+
+        chatClient.PublishMessage(channelName, inputField.text);
         inputField.text = "";
     }
-    public void DebugReturn(DebugLevel level, string message)
+    public void OnConnected()
     {
-        Debug.Log("Chat - " + level +" - " + message);
+        Debug.Log("Chat connected");
+        chatClient.Subscribe(new string[] { channelName });
     }
 
     public void OnChatStateChange(ChatState state)
     {
-        Debug.Log("Chat - OnChatStateChange " + state);
     }
 
-    public void OnConnected()
+    public void OnGetMessages(string channel, string[] senders, object[] messages)
     {
-        Debug.Log("Chat - User: " + userName + " has connected");
-        ChatClient.Subscribe(PhotonNetwork.CurrentRoom.Name, creationOptions: new ChannelCreationOptions() { PublishSubscribers = true });
+        for (int i = 0; i < messages.Length; i++)
+        {
+            chatContent.text += $"\n{senders[i]}: {messages[i]}";
+        }
+    }
+
+    public void DebugReturn(DebugLevel level, string message)
+    {
     }
 
     public void OnDisconnected()
     {
-        Debug.Log("Chat - User" + userName + "has disconnected");
+        Debug.Log("Chat disconnected");
     }
 
-    public void OnGetMessages(string channelName, string[] senders, object[] messages)
+    void OnDestroy()
     {
-        ChatChannel currentChat;
-        if (ChatClient.TryGetChannel(PhotonNetwork.CurrentRoom.Name, out currentChat))
+        if (chatClient != null && chatClient.CanChat)
         {
-            ChatContent.text = currentChat.ToStringMessages();
+            chatClient.Disconnect();
         }
     }
 
+    
     public void OnPrivateMessage(string sender, object message, string channelName)
     {
     }
@@ -74,14 +91,6 @@ public class Chat : MonoBehaviour, IChatClientListener
 
     public void OnSubscribed(string[] channels, bool[] results)
     {
-        for(int i = 0; i < channels.Length; i++)
-        {
-            if (results[i])
-            {
-                Debug.Log("Chat - Subscribed to " + channels[i] + "channel");
-                ChatClient.PublishMessage(PhotonNetwork.CurrentRoom.Name, " has joined the chat!");
-            }
-        }
     }
 
     public void OnUnsubscribed(string[] channels)

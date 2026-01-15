@@ -62,8 +62,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         var authenticationValues = new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName);
-        chat.userName = PhotonNetwork.LocalPlayer.NickName;
-        chat.ChatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat,"1.0", authenticationValues);
+       
 
         Debug.Log("Room has been Joined");
         ActivatePanel("InsideRoom");
@@ -84,7 +83,6 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     }
     public override void OnLeftRoom()
     {
-        chat.ChatClient.Disconnect();
         Debug.Log("Room has been left");
         ActivatePanel("CreateRoom");
 
