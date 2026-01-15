@@ -30,7 +30,6 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
     Vector3 initialSpawnPos;
 
-    public Chat chat;
 
     void Start()
     {
@@ -52,8 +51,6 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
         ////chat function
         var authenticationValues = new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName);
-        chat.userName = PhotonNetwork.LocalPlayer.NickName;
-        chat.ChatClient.Connect(PhotonNetwork.PhotonServerSettings.AppSettings.AppIdChat, "1.0", authenticationValues);
     }
     void Update()
     {
@@ -111,9 +108,10 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
             playerData.totalPlayersInGame = PhotonNetwork.CurrentRoom.PlayerCount;
             playerData.roomName = PhotonNetwork.CurrentRoom.Name;
 
-            GameManager.instance.globalLeaderboard.SubmitScore("Quickest Win", winTime);
             GameManager.instance.SavePlayerData();
         }
+        GameManager.instance.globalLeaderboard.SubmitScore("Quickest Win", winTime);
+
     }
 
     public void LeaveGame()
@@ -123,7 +121,6 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom()
     {
-        chat.ChatClient.Disconnect();
         PhotonNetwork.Disconnect();
     }
 

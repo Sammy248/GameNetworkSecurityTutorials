@@ -15,6 +15,8 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public Transform ListRoomsPanel;
     public Transform chatPanel;
 
+    public Canvas lobbyCanvas;
+    
     public Transform ListRoomPanel;
     public Transform roomEntryPrefab;
     public Transform listRoomPanelContent;
@@ -24,7 +26,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public GameObject startGameButton;
 
     public InputField playerNameInput;
-
+    
     string playerName;
 
     public GameObject textPrefab;
@@ -44,6 +46,17 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
 
     public void CreateARoom()
     {
+        if (!PhotonNetwork.IsConnectedAndReady)
+        {
+            Debug.LogWarning("Not connected to Master yet");
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(roomNameInput.text))
+        {
+            Debug.Log("Returned");
+            return;
+        }
+
         Debug.Log("Created Room?");
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = 4;
@@ -98,7 +111,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
             PhotonNetwork.LocalPlayer.NickName = playerName = playerNameInput.text;
             PhotonNetwork.ConnectUsingSettings();
             UpdatePlayfabUsername(playerName);
-            ActivatePanel("Selection");
+            
         }
         else
         {
@@ -136,6 +149,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public override void OnConnectedToMaster()
     {
         Debug.Log("We have connected to the master server");
+        ActivatePanel("Selection");
     }
 
     public void ActivatePanel(string panelName)
@@ -161,6 +175,8 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         }
         else if (panelName == InsideRoomPanel.gameObject.name)
         {
+            //lobbyCanvas.gameObject.SetActive(true);
+
             InsideRoomPanel.gameObject.SetActive(true);
         }
         else if (panelName == ListRoomsPanel.gameObject.name)
@@ -169,6 +185,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         }
         else if (panelName == chatPanel.gameObject.name)
         {
+            //lobbyCanvas.gameObject.SetActive(false);
             chatPanel.gameObject.SetActive(true);
         }
     }

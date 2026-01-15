@@ -74,7 +74,5 @@ public class GameManager : MonoBehaviour
 
         playerData = JSON.ParseString(decryptedJson).Deserialize<PlayerData>();
     }
-
-
 }
 

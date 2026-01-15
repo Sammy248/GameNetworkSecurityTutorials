@@ -1,9 +1,11 @@
+using System;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 
 public class Multiplayer : MonoBehaviour, IPunObservable
@@ -44,6 +46,19 @@ public class Multiplayer : MonoBehaviour, IPunObservable
         }
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            ActivateChat();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)) //Emote
+        {
+            anim.Play("Dance");
+        }
+    }
+
     void FixedUpdate()
     {
         if (!photonView.IsMine)
@@ -66,16 +81,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
         {
             photonView.RPC("Fire", RpcTarget.AllViaServer, 2);
         }
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            ActivateChat();
-        }
 
-        if (Input.GetKeyDown(KeyCode.R))    //Emote
-        {
-            anim.SetTrigger("Dance");
-            ;
-        }
     }
 
     private void OnCollisionEnter(Collision collision)
