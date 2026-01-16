@@ -138,7 +138,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
 
     public void StartGameClicked()
     {
-        if (PhotonNetwork.PlayerList.Length >= 1)   /////////////////////CHANGE BACK TO 2 OR ELSE
+        if (PhotonNetwork.PlayerList.Length >= 2)
         {
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;

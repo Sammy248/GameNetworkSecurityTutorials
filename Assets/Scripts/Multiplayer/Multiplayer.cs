@@ -48,6 +48,10 @@ public class Multiplayer : MonoBehaviour, IPunObservable
 
     private void Update()
     {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.T))
         {
             ActivateChat();
@@ -55,7 +59,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
 
         if (Input.GetKeyDown(KeyCode.R)) //Emote
         {
-            anim.Play("Dance");
+            anim.SetTrigger("Dance");
         }
     }
 

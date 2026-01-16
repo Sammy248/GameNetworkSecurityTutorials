@@ -279,6 +279,7 @@ GameObject:
   - component: {fileID: 5688144510831332291}
   - component: {fileID: 9026199169650713924}
   - component: {fileID: 3250764063352229870}
+  - component: {fileID: 4592063322219429842}
   m_Layer: 0
   m_Name: Mesh
   m_TagString: Untagged
@@ -376,6 +377,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &4592063322219429842
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3446193740317438295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b8c4a61274f60b4ea5fb4299cfdbf14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowLayerWeightsInspector: 1
+  ShowParameterInspector: 1
+  m_SynchronizeParameters:
+  - Type: 9
+    SynchronizeType: 1
+    Name: Dance
+  m_SynchronizeLayers:
+  - SynchronizeType: 1
+    LayerIndex: 0
 --- !u!1 &5109155823248658579
 GameObject:
   m_ObjectHideFlags: 0
@@ -510,6 +532,7 @@ MonoBehaviour:
   ObservedComponents:
   - {fileID: -8907809472585213886}
   - {fileID: -1971987686613882528}
+  - {fileID: 4592063322219429842}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0

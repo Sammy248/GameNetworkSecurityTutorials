@@ -110,7 +110,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
             GameManager.instance.SavePlayerData();
         }
-        GameManager.instance.globalLeaderboard.SubmitScore("Quickest Win", winTime);
+        GameManager.instance.globalLeaderboard.SubmitScore("Quickest Win", -winTime);
 
     }
 
