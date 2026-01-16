@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections.Generic;
+using PlayFab;
+using PlayFab.ClientModels;
 
 public class MultiplayerLobby : MonoBehaviourPunCallbacks
 {
@@ -13,6 +15,8 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public Transform ListRoomsPanel;
     public Transform chatPanel;
 
+    public Canvas lobbyCanvas;
+    
     public Transform ListRoomPanel;
     public Transform roomEntryPrefab;
     public Transform listRoomPanelContent;
@@ -22,7 +26,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     public GameObject startGameButton;
 
     public InputField playerNameInput;
-
+    
     string playerName;
 
     public GameObject textPrefab;
@@ -42,6 +46,17 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
 
     public void CreateARoom()
     {
+        if (!PhotonNetwork.IsConnectedAndReady)
+        {
+            Debug.LogWarning("Not connected to Master yet");
+            return;
+        }
+        if (string.IsNullOrWhiteSpace(roomNameInput.text))
+        {
+            Debug.Log("Returned");
+            return;
+        }
+
         Debug.Log("Created Room?");
         RoomOptions roomOptions = new RoomOptions();
         roomOptions.MaxPlayers = 4;
@@ -91,21 +106,50 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
     }
     public void LoginButtonClicked()
     {
-        PhotonNetwork.LocalPlayer.NickName = playerName = playerNameInput.text;
-        PhotonNetwork.ConnectUsingSettings();
-        ActivatePanel("Selection");
+        if(playerNameInput.text.Trim() != "")
+        {
+            PhotonNetwork.LocalPlayer.NickName = playerName = playerNameInput.text;
+            PhotonNetwork.ConnectUsingSettings();
+            UpdatePlayfabUsername(playerName);
+            
+        }
+        else
+        {
+            Debug.Log("Player Name is Invalid");
+        }
+            
+    }
+    void UpdatePlayfabUsername(string name)
+    {
+        UpdateUserTitleDisplayNameRequest request = new UpdateUserTitleDisplayNameRequest
+        {
+            DisplayName = name,
+        };
+        PlayFabClientAPI.UpdateUserTitleDisplayName(request, PlayFabUpdateUserTitleDisplayNameResult, PlayFabUpdateUserTitleDisplayNameError);
+    }
+    void PlayFabUpdateUserTitleDisplayNameResult(UpdateUserTitleDisplayNameResult updateUserTitleDisplayNameResult)
+    {
+        Debug.Log("PlayFab - UserTitleDisplayName Updated");
+    }
+    void PlayFabUpdateUserTitleDisplayNameError(PlayFabError updateUserTitleDisplayNameError)
+    {
+        Debug.Log("PlayFab - Error occured while updating UserTitleDisplayName: " + updateUserTitleDisplayNameError.ErrorMessage);
     }
 
     public void StartGameClicked()
     {
-        PhotonNetwork.CurrentRoom.IsOpen = false;
-        PhotonNetwork.CurrentRoom.IsVisible = false;
-        PhotonNetwork.LoadLevel("Multiplayer");
+        if (PhotonNetwork.PlayerList.Length >= 2)
+        {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+            PhotonNetwork.LoadLevel("Multiplayer");
+        }            
     }
 
     public override void OnConnectedToMaster()
     {
         Debug.Log("We have connected to the master server");
+        ActivatePanel("Selection");
     }
 
     public void ActivatePanel(string panelName)
@@ -131,6 +175,8 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         }
         else if (panelName == InsideRoomPanel.gameObject.name)
         {
+            //lobbyCanvas.gameObject.SetActive(true);
+
             InsideRoomPanel.gameObject.SetActive(true);
         }
         else if (panelName == ListRoomsPanel.gameObject.name)
@@ -139,6 +185,7 @@ public class MultiplayerLobby : MonoBehaviourPunCallbacks
         }
         else if (panelName == chatPanel.gameObject.name)
         {
+            //lobbyCanvas.gameObject.SetActive(false);
             chatPanel.gameObject.SetActive(true);
         }
     }

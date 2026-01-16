@@ -1,13 +1,17 @@
+using System;
 using Photon.Pun;
 using Photon.Pun.UtilityScripts;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 
 public class Multiplayer : MonoBehaviour, IPunObservable
 {
+    private GameObject chatPanel;
+
     public float movementSpeed = 10f;
     float[] bulletSpeed = { 1f, 2f };
     int[] bulletDamage = { 10, 20 };
@@ -26,12 +30,37 @@ public class Multiplayer : MonoBehaviour, IPunObservable
 
     PhotonView photonView;
 
+    public Animator anim;
+
     public int health = 100;
     public Slider healthBar;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         photonView = GetComponent<PhotonView>();
+
+        if (photonView.IsMine)
+        {
+            chatPanel = GameObject.FindGameObjectWithTag("ChatPanel");
+            chatPanel.SetActive(false);
+        }
+    }
+
+    private void Update()
+    {
+        if (!photonView.IsMine)
+        {
+            return;
+        }
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            ActivateChat();
+        }
+
+        if (Input.GetKeyDown(KeyCode.R)) //Emote
+        {
+            anim.SetTrigger("Dance");
+        }
     }
 
     void FixedUpdate()
@@ -56,6 +85,7 @@ public class Multiplayer : MonoBehaviour, IPunObservable
         {
             photonView.RPC("Fire", RpcTarget.AllViaServer, 2);
         }
+
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -227,4 +257,12 @@ public class Multiplayer : MonoBehaviour, IPunObservable
 
         }
     }
+    void ActivateChat()
+    {
+        if (!photonView.IsMine || chatPanel == null)
+            return;
+
+        chatPanel.SetActive(!chatPanel.activeSelf);
+    }
+
 }

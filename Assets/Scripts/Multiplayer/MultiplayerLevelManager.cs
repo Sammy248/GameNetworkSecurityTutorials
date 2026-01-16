@@ -11,6 +11,7 @@ using System;
 
 public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 {
+    public bool timerPause = false;
     public int maxKills = 3;
     public GameObject gameOverPopUp;
     public Text winnerText;
@@ -23,6 +24,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
     public int spawnIndex;
     public Vector3[] spawnPositions;
 
+    float elapsedTime = 0;
     float timer;
 
 
@@ -31,7 +33,6 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
     void Start()
     {
-
         _photonView = GetComponent<PhotonView>();
 
         spawnIndex = PhotonNetwork.LocalPlayer.ActorNumber - 1; //give each player a number for spawning
@@ -47,10 +48,17 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
 
         //set timer
         timer = 100;
+
+        ////chat function
+        var authenticationValues = new Photon.Chat.AuthenticationValues(PhotonNetwork.LocalPlayer.NickName);
     }
     void Update()
     {
-        timer -= Time.deltaTime;
+        if (!timerPause)
+        {
+            timer -= Time.deltaTime;
+        }
+ 
         if (timer>= 0)
         {
             timerText.text = timer.ToString();
@@ -69,23 +77,41 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
         {            
             winnerText.text = targetPlayer.NickName;
             gameOverPopUp.SetActive(true);
+            timerPause = true;
+            elapsedTime = 100 - timer;
             StorePersonalBest();
         }        
     }
     void StorePersonalBest()
     {
-        int currentScore = PhotonNetwork.LocalPlayer.GetScore();
+        Debug.Log("Store Personal Best");
+        int kills = PhotonNetwork.LocalPlayer.GetScore();
+        int winTime = (int)elapsedTime;
+        Debug.Log("Kills: " + kills + " time: " + winTime);
         PlayerData playerData = GameManager.instance.playerData;
-        if (currentScore > playerData.bestScore)
+        if (kills > playerData.bestScore)
         {
             playerData.username = PhotonNetwork.LocalPlayer.NickName;
-            playerData.bestScore = currentScore;
+            playerData.bestScore = kills;
+            playerData.bestScoreDate = DateTime.UtcNow.ToString();
+            playerData.totalPlayersInGame = PhotonNetwork.CurrentRoom.PlayerCount;
+            playerData.roomName = PhotonNetwork.CurrentRoom.Name;
+
+            GameManager.instance.globalLeaderboard.SubmitScore("Most Kills", kills);
+            GameManager.instance.SavePlayerData();
+        }
+        if (winTime < playerData.quickestTime)
+        {
+            playerData.username = PhotonNetwork.LocalPlayer.NickName;
+            playerData.quickestTime = winTime;
             playerData.bestScoreDate = DateTime.UtcNow.ToString();
             playerData.totalPlayersInGame = PhotonNetwork.CurrentRoom.PlayerCount;
             playerData.roomName = PhotonNetwork.CurrentRoom.Name;
 
             GameManager.instance.SavePlayerData();
         }
+        GameManager.instance.globalLeaderboard.SubmitScore("Quickest Win", -winTime);
+
     }
 
     public void LeaveGame()
@@ -112,6 +138,7 @@ public class MultiplayerLevelManager : MonoBehaviourPunCallbacks
             //photonView.RPC("ResetPlayer", RpcTarget.AllViaServer);
             ResetPlayer();
             timer = 100;
+            timerPause = false;
             if (!photonView.IsMine)
             {
                 return;
